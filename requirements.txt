@@ -1,0 +1,6 @@
+streamlit
+scikit-learn
+scipy.sparse
+pandas
+wordcloud
+
