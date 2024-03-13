@@ -1,0 +1,6 @@
+streamlit==0.3
+scikit-learn
+scipy>=1.7.3
+pandas
+wordcloud
+openpyxl
