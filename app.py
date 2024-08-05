@@ -34,7 +34,8 @@ def preprocess_data(data):
 # Fungsi untuk melatih model
 def train_model(X_train, y_train):
     NB = GaussianNB()
-    X_train_dense = X_train.toarray()  # Mengonversi matriks sparse menjadi matriks padat
+    X_train_dense = X_train.toarray() 
+# Mengonversi matriks sparse menjadi matriks padat
     NB.fit(X_train_dense, y_train)
     return NB
 
@@ -51,7 +52,7 @@ def display_evaluation(y_test, y_pred):
     st.write(df_cm)
 
 def main():
-    st.title("Aplikasi Klasifikasi Sentimen")
+    st.title("Sistem Deteksi Berita Hoax Naive Bayes")
 
     # Menggunakan dataset yang sudah di-hardcode
     data = load_data('dataset_clean.xlsx')
@@ -59,7 +60,7 @@ def main():
     model = train_model(X_train, y_train)
 
     # Input teks untuk diprediksi
-    st.write("Masukkan teks untuk diprediksi:")
+    st.write("Masukkan Judul Prediksi:")
     input_text = st.text_input("Teks", "")
     if st.button("Deteksi"):
         if input_text:
@@ -68,24 +69,24 @@ def main():
             input_text_chi2_dense = input_text_chi2.toarray()
             prediction = model.predict(input_text_chi2_dense)
             sentiment = "Fakta" if prediction[0] == 1 else "Hoax"
-            st.write("Hasil prediksi:", sentiment)
+            st.write("Hasil deteksi:", sentiment)
 
     # Tampilkan Word Cloud
     st.write("Word Cloud untuk Semua Data:")
     all_text = ' '.join(data['clean_text'])
-    wordcloud_all = WordCloud(width=800, height=400, background_color='white').generate(all_text)
+    wordcloud_all = WordCloud(width=80, height=40, background_color='white').generate(all_text)
     st.image(wordcloud_all.to_array(), use_column_width=True)
 
     st.write("Word Cloud untuk Fakta:")
     fakta = data[data['Label'] == 1]
     all_text_fakta = ' '.join(fakta['clean_text'])
-    wordcloud_fakta = WordCloud(width=800, height=400, background_color='white').generate(all_text_fakta)
+    wordcloud_fakta = WordCloud(width=80, height=40, background_color='white').generate(all_text_fakta)
     st.image(wordcloud_fakta.to_array(), use_column_width=True)
 
     st.write("Word Cloud untuk Hoax:")
     hoax = data[data['Label'] == 0]
     all_text_hoax = ' '.join(hoax['clean_text'])
-    wordcloud_hoax = WordCloud(width=800, height=400, background_color='white').generate(all_text_hoax)
+    wordcloud_hoax = WordCloud(width=80, height=40, background_color='white').generate(all_text_hoax)
     st.image(wordcloud_hoax.to_array(), use_column_width=True)
 
     # Evaluasi model
