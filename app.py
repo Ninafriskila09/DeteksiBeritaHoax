@@ -15,7 +15,18 @@ def load_data(file):
         if file.name.endswith('.xlsx'):
             data = pd.read_excel(file)
         elif file.name.endswith('.csv'):
-            data = pd.read_csv(file)
+            # Mencoba beberapa encoding umum untuk file CSV
+            encodings = ['utf-8', 'ISO-8859-1', 'latin1', 'cp1252']
+            data = None
+            for encoding in encodings:
+                try:
+                    data = pd.read_csv(file, encoding=encoding)
+                    break
+                except UnicodeDecodeError:
+                    continue
+            if data is None:
+                st.error("Gagal membaca file CSV dengan encoding yang diketahui.")
+                return None
         else:
             st.error("Format file tidak didukung. Harap unggah file Excel (.xlsx) atau CSV (.csv).")
             return None
@@ -112,7 +123,6 @@ def main():
 if __name__ == '__main__':
     main()
 
-    
    
 
    
