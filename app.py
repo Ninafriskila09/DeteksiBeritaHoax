@@ -62,17 +62,6 @@ def display_evaluation(y_test, y_pred):
 def main():
     st.title("Aplikasi Klasifikasi Sentimen")
 
-    # Upload file dataset
-    st.write("Upload file dataset:")
-    uploaded_file = st.file_uploader(
-        "Pilih file CSV atau Excel", type=['csv', 'xlsx'])
-
-    if uploaded_file is not None:
-        data = load_data(uploaded_file)
-        X_train, y_train, X_test, y_test, vectorizer, chi2_features = preprocess_data(
-            data)
-        model = train_model(X_train, y_train)
-
         # Evaluasi model
         X_test_chi2 = chi2_features.transform(X_test)
         # Konversi matriks sparse menjadi matriks padat
