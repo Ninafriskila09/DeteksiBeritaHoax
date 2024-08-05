@@ -52,7 +52,7 @@ def display_evaluation(y_test, y_pred):
     st.write(df_cm)
 
 def main():
-    st.title("Sistem Deteksi Berita Hoax Naive Bayes")
+    st.title("Sistem Deteksi Berita Hoaks Naive Bayes")
 
     # Menggunakan dataset yang sudah di-hardcode
     data = load_data('dataset_clean.xlsx')
@@ -80,13 +80,13 @@ def main():
     st.write("Word Cloud untuk Fakta:")
     fakta = data[data['Label'] == 1]
     all_text_fakta = ' '.join(fakta['clean_text'])
-    wordcloud_fakta = WordCloud(width=80, height=40, background_color='white').generate(all_text_fakta)
+    wordcloud_fakta = WordCloud(width=800, height=400, background_color='white').generate(all_text_fakta)
     st.image(wordcloud_fakta.to_array(), use_column_width=True)
 
     st.write("Word Cloud untuk Hoax:")
     hoax = data[data['Label'] == 0]
     all_text_hoax = ' '.join(hoax['clean_text'])
-    wordcloud_hoax = WordCloud(width=80, height=40, background_color='white').generate(all_text_hoax)
+    wordcloud_hoax = WordCloud(width=800, height=400, background_color='white').generate(all_text_hoax)
     st.image(wordcloud_hoax.to_array(), use_column_width=True)
 
     # Evaluasi model
