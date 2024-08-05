@@ -5,12 +5,10 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.feature_selection import SelectKBest, chi2
 from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import classification_report, confusion_matrix
-from scipy.sparse import csr_matrix
 from wordcloud import WordCloud
 
-# Contoh dataset yang sudah di-hardcode
+# Data yang di-hardcode
 def load_data():
-    # Dataset contoh
     data = pd.DataFrame({
         'clean_text': [
             'This is a fact.',
@@ -105,4 +103,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
