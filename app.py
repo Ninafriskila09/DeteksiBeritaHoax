@@ -74,7 +74,7 @@ def main():
     # Tampilkan Word Cloud
     st.write("Word Cloud untuk Semua Data:")
     all_text = ' '.join(data['clean_text'])
-    wordcloud_all = WordCloud(width=80, height=40, background_color='white').generate(all_text)
+    wordcloud_all = WordCloud(width=800, height=400, background_color='white').generate(all_text)
     st.image(wordcloud_all.to_array(), use_column_width=True)
 
     st.write("Word Cloud untuk Fakta:")
