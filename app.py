@@ -58,11 +58,17 @@ def main():
     X_train, y_train, X_test, y_test, vectorizer, chi2_features = preprocess_data(data)
     model = train_model(X_train, y_train)
 
-    # Evaluasi model
-    X_test_chi2 = chi2_features.transform(X_test)
-    X_test_chi2_dense = X_test_chi2.toarray()  # Konversi matriks sparse menjadi matriks padat
-    y_pred = model.predict(X_test_chi2_dense)
-    display_evaluation(y_test, y_pred)
+    # Input teks untuk diprediksi
+    st.write("Masukkan teks untuk diprediksi:")
+    input_text = st.text_input("Teks", "")
+    if st.button("Deteksi"):
+        if input_text:
+            input_text_tfidf = vectorizer.transform([input_text])
+            input_text_chi2 = chi2_features.transform(input_text_tfidf)
+            input_text_chi2_dense = input_text_chi2.toarray()
+            prediction = model.predict(input_text_chi2_dense)
+            sentiment = "Fakta" if prediction[0] == 1 else "Hoax"
+            st.write("Hasil prediksi:", sentiment)
 
     # Tampilkan Word Cloud
     st.write("Word Cloud untuk Semua Data:")
@@ -82,16 +88,11 @@ def main():
     wordcloud_hoax = WordCloud(width=800, height=400, background_color='white').generate(all_text_hoax)
     st.image(wordcloud_hoax.to_array(), use_column_width=True)
 
-    # Input teks untuk diprediksi
-    st.write("Masukkan teks untuk diprediksi:")
-    input_text = st.text_input("Teks", "")
-    if input_text:
-        input_text_tfidf = vectorizer.transform([input_text])
-        input_text_chi2 = chi2_features.transform(input_text_tfidf)
-        input_text_chi2_dense = input_text_chi2.toarray()
-        prediction = model.predict(input_text_chi2_dense)
-        sentiment = "Fakta" if prediction[0] == 1 else "Hoax"
-        st.write("Hasil prediksi:", sentiment)
+    # Evaluasi model
+    X_test_chi2 = chi2_features.transform(X_test)
+    X_test_chi2_dense = X_test_chi2.toarray()  # Konversi matriks sparse menjadi matriks padat
+    y_pred = model.predict(X_test_chi2_dense)
+    display_evaluation(y_test, y_pred)
 
 if __name__ == '__main__':
     main()
