@@ -24,9 +24,7 @@ def preprocess_data(data, vectorizer, chi2_features):
     X_raw = data["clean_text"]
     y_raw = data["Label"]
 
-    X_train, X_test, y_train, y_test = train_test_split(
-        X_raw, y_raw, test_size=0.2, random_state=42
-    )
+    X_train, X_test, y_train, y_test = train_test_split(X_raw, y_raw, test_size=0.2, random_state=42)
 
     X_train_TFIDF = vectorizer.transform(X_train)
     X_test_TFIDF = vectorizer.transform(X_test)
