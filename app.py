@@ -36,6 +36,19 @@ def train_model(X_train, y_train):
     X_train_dense = csr_matrix.toarray(X_train)
     NB.fit(X_train_dense, y_train)
     return NB
+# Fungsi untuk menampilkan hasil evaluasi
+
+
+def display_evaluation(y_test, y_pred):
+    st.write("Classification Report:")
+    st.text(classification_report(y_test, y_pred))
+
+    columns = sorted(y_test.unique())
+    confm = confusion_matrix(y_test, y_pred, labels=columns)
+    df_cm = pd.DataFrame(confm, index=columns, columns=columns)
+
+    st.write("Confusion Matrix:")
+    st.write(df_cm)
 
  # Input teks untuk diprediksi
     st.write("Masukkan Judul Prediksi:")
@@ -73,5 +86,5 @@ def train_model(X_train, y_train):
     y_pred = model.predict(X_test_chi2_dense)
     display_evaluation(y_test, y_pred)
 
-if __name__ == '__main__':
-    main()
+if _name_ == '_main_':
+    main()
