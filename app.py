@@ -73,6 +73,5 @@ def train_model(X_train, y_train):
     y_pred = model.predict(X_test_chi2_dense)
     display_evaluation(y_test, y_pred)
 
-if _name_ == '_main_':
-    main()
-          
+if __name__ == '__main__':
+    main()
