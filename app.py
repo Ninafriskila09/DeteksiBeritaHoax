@@ -27,8 +27,15 @@ def load_data(file_path):
 
 # Fungsi untuk melakukan pemrosesan data
 def preprocess_data(data, vectorizer, chi2_features):
+    if 'clean_text' not in data.columns or 'Label' not in data.columns:
+        raise ValueError("Dataset harus memiliki kolom 'clean_text' dan 'Label'")
+
     X_raw = data["clean_text"]
     y_raw = data["Label"]
+    
+    if X_raw.empty or y_raw.empty:
+        raise ValueError("Data tidak boleh kosong")
+
     X_train, X_test, y_train, y_test = train_test_split(
         X_raw, y_raw, test_size=0.2, random_state=42
     )
