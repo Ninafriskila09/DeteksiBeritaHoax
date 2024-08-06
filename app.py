@@ -1,24 +1,19 @@
 import streamlit as st
 import pandas as pd
-import joblib
+from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.feature_selection import SelectKBest, chi2
 from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import classification_report, confusion_matrix
 from scipy.sparse import csr_matrix
 from wordcloud import WordCloud
+import joblib
 
-# Nama file model dan alat preprocessing
+# Nama file dataset
+DATASET_FILE = 'dataset_clean.xlsx'
 MODEL_FILE = 'naive_bayes_model.joblib'
 VECTORIZER_FILE = 'tfidf_vectorizer.joblib'
 CHI2_FEATURES_FILE = 'chi2_features.joblib'
-
-# Fungsi untuk memuat model dan alat preprocessing
-def load_model():
-    model = joblib.load(MODEL_FILE)
-    vectorizer = joblib.load(VECTORIZER_FILE)
-    chi2_features = joblib.load(CHI2_FEATURES_FILE)
-    return model, vectorizer, chi2_features
 
 # Fungsi untuk membaca data
 def load_data(file_path):
@@ -27,14 +22,8 @@ def load_data(file_path):
 
 # Fungsi untuk melakukan pemrosesan data
 def preprocess_data(data, vectorizer, chi2_features):
-    if 'clean_text' not in data.columns or 'Label' not in data.columns:
-        raise ValueError("Dataset harus memiliki kolom 'clean_text' dan 'Label'")
-
     X_raw = data["clean_text"]
     y_raw = data["Label"]
-    
-    if X_raw.empty or y_raw.empty:
-        raise ValueError("Data tidak boleh kosong")
 
     X_train, X_test, y_train, y_test = train_test_split(
         X_raw, y_raw, test_size=0.2, random_state=42
@@ -70,10 +59,12 @@ def main():
     st.title("Aplikasi Klasifikasi Sentimen")
 
     # Load dataset
-    data = load_data('dataset_clean.xlsx')
+    data = load_data(DATASET_FILE)
 
     # Load model and preprocessing tools
-    model, vectorizer, chi2_features = load_model()
+    model = joblib.load(MODEL_FILE)
+    vectorizer = joblib.load(VECTORIZER_FILE)
+    chi2_features = joblib.load(CHI2_FEATURES_FILE)
 
     # Preprocessing data
     X_train, y_train, X_test, y_test = preprocess_data(data, vectorizer, chi2_features)
