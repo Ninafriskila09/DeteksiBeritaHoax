@@ -29,16 +29,16 @@ def preprocess_data(data):
     chi2_features = SelectKBest(chi2, k=500)
     X_kbest_features = chi2_features.fit_transform(X_train_TFIDF, y_train)
 
+    return X_kbest_features, y_train, X_test_TFIDF, y_test, vectorizer, chi2_features
+
 # Fungsi untuk melatih model
 def train_model(X_train, y_train):
     NB = GaussianNB()
-    # Mengonversi matriks sparse menjadi matriks padat
-    X_train_dense = csr_matrix.toarray(X_train)
+    X_train_dense = csr_matrix.toarray(X_train)  # Mengonversi matriks sparse menjadi matriks padat
     NB.fit(X_train_dense, y_train)
     return NB
+
 # Fungsi untuk menampilkan hasil evaluasi
-
-
 def display_evaluation(y_test, y_pred):
     st.write("Classification Report:")
     st.text(classification_report(y_test, y_pred))
@@ -50,41 +50,52 @@ def display_evaluation(y_test, y_pred):
     st.write("Confusion Matrix:")
     st.write(df_cm)
 
- # Input teks untuk diprediksi
-    st.write("Masukkan Judul Prediksi:")
-    input_text = st.text_input("Teks", "")
-    if st.button("Deteksi"):
+def main():
+    st.title("Aplikasi Klasifikasi Sentimen")
+
+    # Upload file dataset
+    st.write("Upload file dataset:")
+    uploaded_file = st.file_uploader("Pilih file CSV atau Excel", type=['csv', 'xlsx'])
+
+    if uploaded_file is not None:
+        data = load_data(uploaded_file)
+        X_train, y_train, X_test, y_test, vectorizer, chi2_features = preprocess_data(data)
+        model = train_model(X_train, y_train)
+
+        # Tampilkan Word Cloud
+        st.write("Word Cloud untuk Semua Data:")
+        all_text = ' '.join(data['clean_text'])
+        wordcloud_all = WordCloud(width=800, height=400, background_color='white').generate(all_text)
+        st.image(wordcloud_all.to_array(), use_column_width=True)
+
+        st.write("Word Cloud untuk Fakta:")
+        fakta = data[data['Label'] == 1]
+        all_text_fakta = ' '.join(fakta['clean_text'])
+        wordcloud_fakta = WordCloud(width=800, height=400, background_color='white').generate(all_text_fakta)
+        st.image(wordcloud_fakta.to_array(), use_column_width=True)
+
+        st.write("Word Cloud untuk Hoax:")
+        hoax = data[data['Label'] == 0]
+        all_text_hoax = ' '.join(hoax['clean_text'])
+        wordcloud_hoax = WordCloud(width=800, height=400, background_color='white').generate(all_text_hoax)
+        st.image(wordcloud_hoax.to_array(), use_column_width=True)
+
+        # Input teks untuk diprediksi
+        st.write("Masukkan teks untuk diprediksi:")
+        input_text = st.text_input("Teks", "")
         if input_text:
             input_text_tfidf = vectorizer.transform([input_text])
             input_text_chi2 = chi2_features.transform(input_text_tfidf)
-            input_text_chi2_dense = input_text_chi2.toarray()
+            input_text_chi2_dense = csr_matrix.toarray(input_text_chi2)
             prediction = model.predict(input_text_chi2_dense)
             sentiment = "Fakta" if prediction[0] == 1 else "Hoax"
-            st.write("Hasil deteksi:", sentiment)
+            st.write("Hasil prediksi:", sentiment)
 
-    # Tampilkan Word Cloud
-    st.write("Word Cloud untuk Semua Data:")
-    all_text = ' '.join(data['clean_text'])
-    wordcloud_all = WordCloud(width=800, height=400, background_color='white').generate(all_text)
-    st.image(wordcloud_all.to_array(), use_column_width=True)
+        # Evaluasi model
+        X_test_chi2 = chi2_features.transform(X_test)
+        X_test_chi2_dense = csr_matrix.toarray(X_test_chi2)  # Konversi matriks sparse menjadi matriks padat
+        y_pred = model.predict(X_test_chi2_dense)
+        display_evaluation(y_test, y_pred)
 
-    st.write("Word Cloud untuk Fakta:")
-    fakta = data[data['Label'] == 1]
-    all_text_fakta = ' '.join(fakta['clean_text'])
-    wordcloud_fakta = WordCloud(width=800, height=400, background_color='white').generate(all_text_fakta)
-    st.image(wordcloud_fakta.to_array(), use_column_width=True)
-
-    st.write("Word Cloud untuk Hoax:")
-    hoax = data[data['Label'] == 0]
-    all_text_hoax = ' '.join(hoax['clean_text'])
-    wordcloud_hoax = WordCloud(width=800, height=400,background_color='white').generate(all_text_hoax)
-    st.image(wordcloud_hoax.to_array(), use_column_width=True)
-
-    # Evaluasi model
-    X_test_chi2 = chi2_features.transform(X_test)
-    X_test_chi2_dense = X_test_chi2.toarray()  # Konversi matriks sparse menjadi matriks padat
-    y_pred = model.predict(X_test_chi2_dense)
-    display_evaluation(y_test, y_pred)
-
-if _name_ == '_main_':
-    main()
+if __name__ == '__main__':
+    main()
