@@ -9,7 +9,7 @@ from scipy.sparse import csr_matrix
 from wordcloud import WordCloud
 import joblib
 
-# Nama file dataset
+# Nama file dataset dan model
 DATASET_FILE = 'dataset_clean.xlsx'
 MODEL_FILE = 'naive_bayes_model.joblib'
 VECTORIZER_FILE = 'tfidf_vectorizer.joblib'
@@ -17,8 +17,7 @@ CHI2_FEATURES_FILE = 'chi2_features.joblib'
 
 # Fungsi untuk membaca data
 def load_data(file_path):
-    data = pd.read_excel(file_path)
-    return data
+    return pd.read_excel(file_path)
 
 # Fungsi untuk melakukan pemrosesan data
 def preprocess_data(data, vectorizer, chi2_features):
@@ -32,9 +31,10 @@ def preprocess_data(data, vectorizer, chi2_features):
     X_train_TFIDF = vectorizer.transform(X_train)
     X_test_TFIDF = vectorizer.transform(X_test)
 
-    X_kbest_features = chi2_features.transform(X_train_TFIDF)
+    X_train_kbest = chi2_features.transform(X_train_TFIDF)
+    X_test_kbest = chi2_features.transform(X_test_TFIDF)
 
-    return X_kbest_features, y_train, X_test_TFIDF, y_test
+    return X_train_kbest, y_train, X_test_kbest, y_test
 
 # Fungsi untuk melatih model
 def train_model(X_train, y_train):
@@ -70,9 +70,8 @@ def main():
     X_train, y_train, X_test, y_test = preprocess_data(data, vectorizer, chi2_features)
 
     # Evaluasi model
-    X_test_chi2 = chi2_features.transform(X_test)
-    X_test_chi2_dense = csr_matrix.toarray(X_test_chi2)
-    y_pred = model.predict(X_test_chi2_dense)
+    X_test_dense = csr_matrix.toarray(X_test)
+    y_pred = model.predict(X_test_dense)
     display_evaluation(y_test, y_pred)
 
     # Tampilkan Word Cloud
@@ -106,3 +105,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
