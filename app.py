@@ -3,7 +3,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.feature_selection import SelectKBest, chi2
-from sklearn.naive_bayes import GaussianNB
+from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import classification_report, confusion_matrix
 from scipy.sparse import csr_matrix
 from wordcloud import WordCloud
@@ -33,11 +33,10 @@ def preprocess_data(data):
 
 # Fungsi untuk melatih model
 def train_model(X_train, y_train):
-    NB = GaussianNB()
-    X_train_dense = X_train.toarray() 
-# Mengonversi matriks sparse menjadi matriks padat
-    NB.fit(X_train_dense, y_train)
-    return NB
+    model = LogisticRegression(max_iter=1000)
+    X_train_dense = X_train.toarray()  # Mengonversi matriks sparse menjadi matriks padat
+    model.fit(X_train_dense, y_train)
+    return model
 
 # Fungsi untuk menampilkan hasil evaluasi
 def display_evaluation(y_test, y_pred):
@@ -52,7 +51,7 @@ def display_evaluation(y_test, y_pred):
     st.write(df_cm)
 
 def main():
-    st.title("Sistem Deteksi Berita Hoaks Naive Bayes")
+    st.title("Sistem Deteksi Berita Hoaks")
 
     # Menggunakan dataset yang sudah di-hardcode
     data = load_data('dataset_clean.xlsx')
@@ -60,7 +59,7 @@ def main():
     model = train_model(X_train, y_train)
 
     # Input teks untuk diprediksi
-    st.write("Masukkan Judul Prediksi:")
+    st.write("Masukkan Judul untuk Prediksi:")
     input_text = st.text_input("Teks", "")
     if st.button("Deteksi"):
         if input_text:
@@ -69,7 +68,7 @@ def main():
             input_text_chi2_dense = input_text_chi2.toarray()
             prediction = model.predict(input_text_chi2_dense)
             sentiment = "Fakta" if prediction[0] == 1 else "Hoax"
-            st.write("Hasil deteksi:", sentiment)
+            st.write("Hasil Deteksi:", sentiment)
 
     # Tampilkan Word Cloud
     st.write("Word Cloud untuk Semua Data:")
