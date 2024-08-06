@@ -33,7 +33,7 @@ def preprocess_data(data):
 
 # Fungsi untuk melatih model
 def train_model(X_train, y_train):
-    model = LogisticRegression(max_iter=1000)
+    model = LogisticRegression(max_iter=1000, class_weight='balanced')  # Menyeimbangkan kelas
     X_train_dense = X_train.toarray()  # Mengonversi matriks sparse menjadi matriks padat
     model.fit(X_train_dense, y_train)
     return model
@@ -55,6 +55,10 @@ def main():
 
     # Menggunakan dataset yang sudah di-hardcode
     data = load_data('dataset_clean.xlsx')
+    
+    st.write("Distribusi Label:")
+    st.write(data['Label'].value_counts())
+    
     X_train, y_train, X_test, y_test, vectorizer, chi2_features = preprocess_data(data)
     model = train_model(X_train, y_train)
 
@@ -96,3 +100,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
