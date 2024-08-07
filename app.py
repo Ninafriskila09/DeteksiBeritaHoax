@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
-import pickle
+import joblib 
+from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.feature_selection import SelectKBest, chi2
 from sklearn.naive_bayes import GaussianNB
