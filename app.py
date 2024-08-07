@@ -3,7 +3,7 @@ import pandas as pd
 import pickle
 
 with open ('hoax_pickle', 'rb') as file:
-    classifier1 = pickle.load(file)
+    hasil = pickle.load(file)
   
 # Input teks untuk diprediksi
 st.write("Masukkan teks untuk diprediksi:")
