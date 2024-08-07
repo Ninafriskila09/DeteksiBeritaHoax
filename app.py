@@ -59,7 +59,12 @@ def display_evaluation(y_test, y_pred):
 
 def main():
     st.title("Aplikasi Klasifikasi Sentimen")
-    st.write("def")
+     # Input teks untuk diprediksi
+        st.write("Masukkan teks untuk diprediksi:")
+        input_text = st.text_input("Teks", "")
+        if input_text:
+            input_
+
 
 
 
