@@ -16,28 +16,6 @@ input_text = st.text_input("Teks", "")
             sentiment = "Fakta" if prediction[0] == 0 else "Hoax"
             st.write("Hasil prediksi:", sentiment)
     
-       
-
-        # Tampilkan Word Cloud
-        st.write("Word Cloud untuk Semua Data:")
-        all_text = ' '.join(data['clean_text'])
-        wordcloud_all = WordCloud(
-            width=800, height=400, background_color='white').generate(all_text)
-        st.image(wordcloud_all.to_array(), use_column_width=True)
-
-        st.write("Word Cloud untuk Fakta:")
-        fakta = data[data['Label'] == 1]
-        all_text_fakta = ' '.join(fakta['clean_text'])
-        wordcloud_fakta = WordCloud(
-            width=800, height=400, background_color='white').generate(all_text_fakta)
-        st.image(wordcloud_fakta.to_array(), use_column_width=True)
-
-        st.write("Word Cloud untuk Hoax:")
-        hoax = data[data['Label'] == 0]
-        all_text_hoax = ' '.join(hoax['clean_text'])
-        wordcloud_hoax = WordCloud(
-            width=800, height=400, background_color='white').generate(all_text_hoax)
-        st.image(wordcloud_hoax.to_array(), use_column_width=True)
 
         
 
