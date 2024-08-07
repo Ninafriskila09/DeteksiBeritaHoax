@@ -1,4 +1,5 @@
 import pickle
+modelfit = 
 with open('hoax_pickle', 'wb') as file:
   pickle.dump(modelfit,file)
 
