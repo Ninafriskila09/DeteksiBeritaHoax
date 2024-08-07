@@ -1,7 +1,8 @@
 import pickle
-modelfit = 
+modelfit = Hoax.ipynb
+
 with open('hoax_pickle', 'wb') as file:
   pickle.dump(modelfit,file)
 
 with open('hoax_pickle', 'rb') as file:
-hasil = pickle.load(r)
+  hasil = pickle.load(r)
