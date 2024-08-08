@@ -27,42 +27,25 @@ def main():
     # Muat objek yang telah disimpan
     vectorizer, chi2_features, model = load_objects('vectorizer.pkl', 'chi2_features.pkl', 'model.pkl')
 
-    st.sidebar.header('Upload Your Data')
-    uploaded_file = st.sidebar.file_uploader("Choose a file", type=['xlsx'])
+    st.header('Enter Text for Classification')
+
+    # Input teks dari pengguna
+    user_input = st.text_area("Enter text here:", "")
     
-    if uploaded_file:
-        data = pd.read_excel(uploaded_file)
-        if 'clean_text' not in data.columns:
-            st.error("File must contain a 'clean_text' column.")
-        else:
-            st.write("Data Sample:")
-            st.write(data.head())
-
-            text_data = data["clean_text"]
-
+    if st.button('Classify'):
+        if user_input:
+            text_data = [user_input]  # Convert input to list
             # Preprocess the new data
             X_new = preprocess_new_data(vectorizer, chi2_features, text_data)
-
+            
             # Make predictions
             y_pred = model.predict(csr_matrix.toarray(X_new))
             
             # Display predictions
-            data['Predictions'] = y_pred
             st.write("Predictions:")
-            st.write(data[['clean_text', 'Predictions']])
-            
-            # Optionally, if you have true labels in the uploaded file:
-            if 'Label' in data.columns:
-                y_true = data["Label"]
-                st.write("Classification Report:")
-                st.text(classification_report(y_true, y_pred))
-
-                columns = sorted(y_true.unique())
-                confm = confusion_matrix(y_true, y_pred, labels=columns)
-                df_cm = pd.DataFrame(confm, index=columns, columns=columns)
-
-                st.write("Confusion Matrix:")
-                st.write(df_cm)
+            st.write(f"Prediction: {y_pred[0]}")
+        else:
+            st.error("Please enter some text.")
 
 if __name__ == "__main__":
     main()
