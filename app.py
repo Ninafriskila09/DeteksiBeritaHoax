@@ -20,6 +20,14 @@ def preprocess_new_data(vectorizer, chi2_features, text_data):
     X_kbest_features = chi2_features.transform(X_TFIDF)
     return X_kbest_features
 
+# Fungsi untuk melatih model
+def train_model(X_train, y_train):
+    NB = GaussianNB()
+    # Mengonversi matriks sparse menjadi matriks padat
+    X_train_dense = csr_matrix.toarray(X_train)
+    NB.fit(X_train_dense, y_train)
+    return NB
+
 # Fungsi utama untuk aplikasi Streamlit
 def main():
     st.title('Text Classification App')
