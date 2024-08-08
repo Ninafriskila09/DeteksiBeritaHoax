@@ -8,19 +8,28 @@ from sklearn.metrics import classification_report, confusion_matrix
 from scipy.sparse import csr_matrix
 from wordcloud import WordCloud
 
-# Fungsi untuk membaca data dan melakukan preprocessing
-
-def load_data(file_path):
-    data = pd.read_excel(file_path)
+# Fungsi untuk memuat data
+def load_data():
+    # Contoh data dummy, Anda bisa mengganti ini dengan data asli
+    data = pd.DataFrame({
+        'clean_text': [
+            'This is a sample text for classification.',
+            'Another example of text data.',
+            'Machine learning is amazing.',
+            'Fake news is dangerous.',
+            'Real news is very informative.'
+        ],
+        'Label': [0, 0, 1, 0, 1]  # 0 = Hoax, 1 = Fakta
+    })
     return data
 
 # Fungsi untuk melakukan pemrosesan data
-
 def preprocess_data(data):
     X_raw = data["clean_text"]
     y_raw = data["Label"]
     X_train, X_test, y_train, y_test = train_test_split(
-        X_raw, y_raw, test_size=0.2, random_state=42)
+        X_raw, y_raw, test_size=0.2, random_state=42
+    )
 
     vectorizer = TfidfVectorizer(ngram_range=(1, 2))
     vectorizer.fit(X_train)
@@ -33,7 +42,6 @@ def preprocess_data(data):
     return X_kbest_features, y_train, X_test_TFIDF, y_test, vectorizer, chi2_features
 
 # Fungsi untuk melatih model
-
 def train_model(X_train, y_train):
     NB = GaussianNB()
     # Mengonversi matriks sparse menjadi matriks padat
@@ -42,7 +50,6 @@ def train_model(X_train, y_train):
     return NB
 
 # Fungsi untuk menampilkan hasil evaluasi
-
 def display_evaluation(y_test, y_pred):
     st.write("Classification Report:")
     st.text(classification_report(y_test, y_pred))
@@ -55,17 +62,50 @@ def display_evaluation(y_test, y_pred):
     st.write(df_cm)
 
 def main():
-    st.title("Sistem Deteksi Berita Hoax Naive Bayes")
+    st.title("Aplikasi Klasifikasi Sentimen")
 
-       st.write("Masukkan teks untuk diprediksi:")
-        input_text = st.text_input("Teks", "")
-        if input_text:
-            input_text_tfidf = vectorizer.transform([input_text])
-            input_text_chi2 = chi2_features.transform(input_text_tfidf)
-            input_text_chi2_dense = csr_matrix.toarray(input_text_chi2)
-            prediction = model.predict(input_text_chi2_dense)
-            sentiment = "Non Hoax" if prediction[0] == 0 else "Hoax"
-            st.write("Hasil prediksi:", sentiment)
+    # Muat data langsung dari kode
+    data = load_data()
+    
+    # Lakukan pemrosesan data
+    X_train, y_train, X_test, y_test, vectorizer, chi2_features = preprocess_data(data)
+    model = train_model(X_train, y_train)
+
+    # Evaluasi model
+    X_test_chi2 = chi2_features.transform(X_test)
+    # Konversi matriks sparse menjadi matriks padat
+    X_test_chi2_dense = csr_matrix.toarray(X_test_chi2)
+    y_pred = model.predict(X_test_chi2_dense)
+    display_evaluation(y_test, y_pred)
+
+    # Tampilkan Word Cloud
+    st.write("Word Cloud untuk Semua Data:")
+    all_text = ' '.join(data['clean_text'])
+    wordcloud_all = WordCloud(width=800, height=400, background_color='white').generate(all_text)
+    st.image(wordcloud_all.to_array(), use_column_width=True)
+
+    st.write("Word Cloud untuk Fakta:")
+    fakta = data[data['Label'] == 1]
+    all_text_fakta = ' '.join(fakta['clean_text'])
+    wordcloud_fakta = WordCloud(width=800, height=400, background_color='white').generate(all_text_fakta)
+    st.image(wordcloud_fakta.to_array(), use_column_width=True)
+
+    st.write("Word Cloud untuk Hoax:")
+    hoax = data[data['Label'] == 0]
+    all_text_hoax = ' '.join(hoax['clean_text'])
+    wordcloud_hoax = WordCloud(width=800, height=400, background_color='white').generate(all_text_hoax)
+    st.image(wordcloud_hoax.to_array(), use_column_width=True)
+
+    # Input teks untuk diprediksi
+    st.write("Masukkan teks untuk diprediksi:")
+    input_text = st.text_input("Teks", "")
+    if input_text:
+        input_text_tfidf = vectorizer.transform([input_text])
+        input_text_chi2 = chi2_features.transform(input_text_tfidf)
+        input_text_chi2_dense = csr_matrix.toarray(input_text_chi2)
+        prediction = model.predict(input_text_chi2_dense)
+        sentiment = "Fakta" if prediction[0] == 1 else "Hoax"
+        st.write("Hasil prediksi:", sentiment)
 
 if __name__ == '__main__':
     main()
