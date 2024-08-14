@@ -71,6 +71,18 @@ def display_wordclouds(data):
 
 
 def main():
+    # Mengubah background menjadi putih dengan CSS
+    st.markdown(
+        """
+        <style>
+        .stApp {
+            background-color: white;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
     st.markdown("<h2 style='text-align: center;'>Sistem Deteksi Berita Hoax Naive Bayes</h2>",
                 unsafe_allow_html=True)
 
