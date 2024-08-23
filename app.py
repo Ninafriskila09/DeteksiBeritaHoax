@@ -77,15 +77,29 @@ def main():
     st.markdown("<h2 style='text-align: center;'>Sistem Deteksi Berita Hoax Naive Bayes</h2>",
                 unsafe_allow_html=True)
 
-    # Sidebar menu
-    menu = st.sidebar.radio("Pilih Menu", ["Deteksi Berita", "Evaluasi Model", "Visualisasi Word Cloud"])
+    # Sidebar menu dengan teks lebih besar dan bold
+    st.sidebar.markdown(
+        """
+        <style>
+        .sidebar .sidebar-content {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        </style>
+        <h3>Pilih Menu</h3>
+        """,
+        unsafe_allow_html=True
+    )
+    
+    menu = st.sidebar.radio("", ["Deteksi Berita", "Evaluasi Model", "Visualisasi Word Cloud"])
 
     # Load data dan preprocess
     data = load_data()
     X_features, y_labels, vectorizer = preprocess_data(data)
 
     if menu == "Deteksi Berita":
-        st.markdown("**Masukkan Judul Prediksi**")
+        st.markdown("<h3 style='font-size: 24px; font-weight: bold;'>Masukkan Judul Prediksi</h3>",
+                    unsafe_allow_html=True)
         input_text = st.text_area("", height=150)
 
         detect_button = st.button("Deteksi")
@@ -104,7 +118,8 @@ def main():
             sentiment = "Fakta" if prediction[0] == 0 else "Hoax"
 
             # Menampilkan hasil
-            st.markdown(f"**{sentiment}**")
+            st.markdown(f"<h3 style='font-size: 24px; font-weight: bold;'>{sentiment}</h3>",
+                        unsafe_allow_html=True)
 
     elif menu == "Evaluasi Model":
         # Memisahkan data untuk pelatihan dan pengujian
