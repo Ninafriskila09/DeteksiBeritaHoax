@@ -85,8 +85,7 @@ def main():
     X_features, y_labels, vectorizer = preprocess_data(data)
 
     if menu == "Deteksi Berita":
-        st.markdown("<h3 style='font-size: 24px; font-weight:'>Masukkan Judul Prediksi</h3>",
-                    unsafe_allow_html=True)
+        st.markdown("**Masukkan Judul Prediksi**")
         input_text = st.text_area("", height=120)
 
         detect_button = st.button("Deteksi")
