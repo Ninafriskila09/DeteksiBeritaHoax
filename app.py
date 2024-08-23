@@ -103,6 +103,15 @@ def main():
             prediction = model.predict(input_text_dense)
             sentiment = "Fakta" if prediction[0] == 0 else "Hoax"
 
+            # Mendapatkan nama kelas dari model
+            class_labels = model.classes_
+            class_percentages = dict(zip(class_labels, probabilities * 100))
+
+            st.write(f"**Prediksi:** {sentiment}")
+            st.write("**Persentase Kelas:**")
+            st.write(f"Fakta: {class_percentages.get(0, 0):.2f}%")
+            st.write(f"Hoax: {class_percentages.get(1, 0):.2f}%")
+
             # Menampilkan hasil
             color = "green" if sentiment == "Fakta" else "red"
             st.markdown(f"""
