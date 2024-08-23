@@ -102,23 +102,10 @@ def main():
             # Prediksi menggunakan model yang telah dimuat
             prediction = model.predict(input_text_dense)
             sentiment = "Fakta" if prediction[0] == 0 else "Hoax"
+            color = "green" if sentiment == "Fakta" else "red"
 
-            # Menampilkan hasil
-            fakta_proba = prediction_proba[0][0] * 100
-    hoax_proba = prediction_proba[0][1] * 100
-
-    # Menampilkan hasil
-    st.markdown(f"""
-    <div style="text-align: center; padding: 10px;">
-        <strong>Prediksi:</strong>
-        <div style="background-color: green; color: white; padding: 10px;">
-            <strong>Fakta: {fakta_proba:.2f}%</strong>
-        </div>
-        <div style="background-color: red; color: white; padding: 10px;">
-            <strong>Hoax: {hoax_proba:.2f}%</strong>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
+            # Menampilkan hasil dengan warna yang sesuai
+            st.markdown(f"<p style='color:{color}; font-size:20px;'><strong>{sentiment}</strong></p>", unsafe_allow_html=True)
             
     elif menu == "Evaluasi Model":
         # Memisahkan data untuk pelatihan dan pengujian
