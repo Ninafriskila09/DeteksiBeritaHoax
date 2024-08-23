@@ -105,8 +105,15 @@ def main():
 
             # Menampilkan hasil
             color = "green" if sentiment == "Fakta" else "red"
-            st.markdown(f"<h2 style='color:{color};'>{sentiment}</h2>", unsafe_allow_html=True)
+html_code = f"""
+    <div style='text-align: center;'>
+        <h2 style='color: {color};'>{sentiment}</h2>
+    </div>
+"""
 
+# Menampilkan hasil dengan styling
+st.markdown(html_code, unsafe_allow_html=True)
+    
     elif menu == "Evaluasi Model":
         # Memisahkan data untuk pelatihan dan pengujian
         X_train, X_test, y_train, y_test = train_test_split(X_features, y_labels, test_size=0.2, random_state=42)
