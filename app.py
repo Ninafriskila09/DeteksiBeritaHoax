@@ -104,18 +104,21 @@ def main():
             sentiment = "Fakta" if prediction[0] == 0 else "Hoax"
 
             # Menampilkan hasil
-            color = "green" if sentiment == "Fakta" else "red"
-            st.markdown(f"""
-            <div style="text-align: center; background-color: {color}; color: white; padding: 10px;">
-            <strong>{sentiment}</strong>
-            </div>
-            """, unsafe_allow_html=True)
-            
-            confidence_score = np.max(prediction_proba[0]) * 100
-            confidence_label = f"{confidence_score:.2f}%"
+            fakta_proba = prediction_proba[0][0] * 100
+    hoax_proba = prediction_proba[0][1] * 100
 
-            st.markdown(f"**Sentimen:** {sentiment}")
-            st.markdown(f"**Kepercayaan Prediksi:** {confidence_label}")
+    # Menampilkan hasil
+    st.markdown(f"""
+    <div style="text-align: center; padding: 10px;">
+        <strong>Prediksi:</strong>
+        <div style="background-color: green; color: white; padding: 10px;">
+            <strong>Fakta: {fakta_proba:.2f}%</strong>
+        </div>
+        <div style="background-color: red; color: white; padding: 10px;">
+            <strong>Hoax: {hoax_proba:.2f}%</strong>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
             
     elif menu == "Evaluasi Model":
         # Memisahkan data untuk pelatihan dan pengujian
