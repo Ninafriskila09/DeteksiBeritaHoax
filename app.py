@@ -85,11 +85,9 @@ def main():
     X_features, y_labels, vectorizer = preprocess_data(data)
 
     if menu == "Deteksi Berita":
-        # Menambahkan jarak antara judul dan input
-        st.markdown("<div style='margin-top: 50px;'></div>", unsafe_allow_html=True)
         st.markdown("<h3 style='font-size: 24px; font-weight: bold;'>Masukkan Judul Prediksi</h3>",
                     unsafe_allow_html=True)
-        input_text = st.text_area("", height=120)
+        input_text = st.text_area("", height=150)
 
         detect_button = st.button("Deteksi")
 
@@ -106,6 +104,14 @@ def main():
             prediction = model.predict(input_text_dense)
             sentiment = "Fakta" if prediction[0] == 1 else "Hoax"
 
+            # Menghitung persentase
+            total_count = len(data)
+            fact_count = data[data['Label'] == 1].shape[0]
+            hoax_count = data[data['Label'] == 0].shape[0]
+
+            fact_percentage = (fact_count / total_count) * 100
+            hoax_percentage = (hoax_count / total_count) * 100
+
             # Menampilkan hasil dengan warna
             if sentiment == "Fakta":
                 st.markdown(f"<h3 style='font-size: 24px; color: green; font-weight: bold;'>{sentiment}</h3>",
@@ -113,6 +119,9 @@ def main():
             else:
                 st.markdown(f"<h3 style='font-size: 24px; color: red; font-weight: bold;'>{sentiment}</h3>",
                             unsafe_allow_html=True)
+
+            st.write(f"Persentase Fakta: {fact_percentage:.2f}%")
+            st.write(f"Persentase Hoax: {hoax_percentage:.2f}%")
 
     elif menu == "Evaluasi Model":
         # Memisahkan data untuk pelatihan dan pengujian
@@ -129,4 +138,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
