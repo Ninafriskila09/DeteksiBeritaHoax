@@ -85,7 +85,10 @@ def main():
     X_features, y_labels, vectorizer = preprocess_data(data)
 
     if menu == "Deteksi Berita":
-        st.markdown("**Masukkan Judul Prediksi**")
+        # Menambahkan jarak antara judul dan input
+        st.markdown("<div style='margin-top: 50px;'></div>", unsafe_allow_html=True)
+        st.markdown("<h3 style='font-size: 24px; font-weight: bold;'>Masukkan Judul Prediksi</h3>",
+                    unsafe_allow_html=True)
         input_text = st.text_area("", height=120)
 
         detect_button = st.button("Deteksi")
