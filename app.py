@@ -85,8 +85,7 @@ def main():
     X_features, y_labels, vectorizer = preprocess_data(data)
 
     if menu == "Deteksi Berita":
-        st.markdown("<h3 style='font-size: 24px; font-weight: bold;'>Masukkan Judul Prediksi</h3>",
-                    unsafe_allow_html=True)
+        st.markdown("**Masukkan Judul Prediksi**")
         input_text = st.text_area("", height=150)
 
         detect_button = st.button("Deteksi")
@@ -102,15 +101,10 @@ def main():
 
             # Prediksi menggunakan model yang telah dimuat
             prediction = model.predict(input_text_dense)
-            sentiment = "Fakta" if prediction[0] == 1 else "Hoax"
+            sentiment = "Fakta" if prediction[0] == 0 else "Hoax"
 
-            # Menampilkan hasil dengan warna
-            if sentiment == "Fakta":
-                st.markdown(f"<h3 style='font-size: 24px; color: green; font-weight: bold;'>{sentiment}</h3>",
-                            unsafe_allow_html=True)
-            else:
-                st.markdown(f"<h3 style='font-size: 24px; color: red; font-weight: bold;'>{sentiment}</h3>",
-                            unsafe_allow_html=True)
+            # Menampilkan hasil
+            st.markdown(f"**{sentiment}**")
 
     elif menu == "Evaluasi Model":
         # Memisahkan data untuk pelatihan dan pengujian
