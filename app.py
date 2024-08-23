@@ -77,36 +77,22 @@ def main():
     st.markdown("<h2 style='text-align: center;'>Sistem Deteksi Berita Hoax Naive Bayes</h2>",
                 unsafe_allow_html=True)
 
-    # Sidebar menu dengan teks lebih besar dan bold
-    st.sidebar.markdown(
-        """
-        <style>
-        .sidebar .sidebar-content {
-            font-size: 20px;
-            font-weight: bold;
-        }
-        </style>
-        <h3>Pilih Menu</h3>
-        """,
-        unsafe_allow_html=True
-    )
-    
-    menu = st.sidebar.radio("", ["Deteksi Berita", "Evaluasi Model", "Visualisasi Word Cloud"])
+    # Sidebar menu
+    menu = st.sidebar.radio("Pilih Menu", ["Deteksi Berita", "Evaluasi Model", "Visualisasi Word Cloud"])
 
     # Load data dan preprocess
     data = load_data()
     X_features, y_labels, vectorizer = preprocess_data(data)
 
     if menu == "Deteksi Berita":
-        st.markdown("<h3 style='font-size: 24px; font-weight: bold;'>Masukkan Judul Prediksi</h3>",
-                    unsafe_allow_html=True)
+        st.markdown("**Masukkan Judul Prediksi**")
         input_text = st.text_area("", height=150)
 
         detect_button = st.button("Deteksi")
 
         if detect_button and input_text:
             # Memisahkan data untuk pelatihan dan pengujian
-            X_train, X_test, y_train, y_test = train_test_split(X_features, y_labels, test_size=0.2, random_state=42)
+            X_train, X_test, y_train, y_test = train_test_split(X_features, y_labels, test_size=0.4, random_state=50)
             model = train_model(X_train, y_train)
 
             # Transformasi teks dengan vectorizer yang digunakan untuk melatih model
@@ -118,12 +104,11 @@ def main():
             sentiment = "Fakta" if prediction[0] == 0 else "Hoax"
 
             # Menampilkan hasil
-            st.markdown(f"<h3 style='font-size: 24px; font-weight: bold;'>{sentiment}</h3>",
-                        unsafe_allow_html=True)
+            st.markdown(f"**{sentiment}**")
 
     elif menu == "Evaluasi Model":
         # Memisahkan data untuk pelatihan dan pengujian
-        X_train, X_test, y_train, y_test = train_test_split(X_features, y_labels, test_size=0.2, random_state=42)
+        X_train, X_test, y_train, y_test = train_test_split(X_features, y_labels, test_size=0.4, random_state=50)
         model = train_model(X_train, y_train)
 
         # Evaluasi model
