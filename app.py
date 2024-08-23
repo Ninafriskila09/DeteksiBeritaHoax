@@ -118,8 +118,14 @@ def main():
             sentiment = "Fakta" if prediction[0] == 0 else "Hoax"
 
             # Menampilkan hasil
-            st.markdown(f"<h3 style='font-size: 24px; font-weight: bold;'>{sentiment}</h3>",
-                        unsafe_allow_html=True)
+            st.markdown("<div class='centered'>", unsafe_allow_html=True)
+            if sentiment == "Fakta":
+                st.markdown(f"<h3 class='green-text'>{sentiment}</h3>", unsafe_allow_html=True)
+            else:
+                st.markdown(f"<h3 class='red-text'>{sentiment}</h3>", unsafe_allow_html=True)
+            st.markdown("</div>", unsafe_allow_html=True)
+            import streamlit as st
+
 
     elif menu == "Evaluasi Model":
         # Memisahkan data untuk pelatihan dan pengujian
