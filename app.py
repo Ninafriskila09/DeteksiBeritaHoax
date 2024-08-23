@@ -105,7 +105,14 @@ def main():
             color = "green" if sentiment == "Fakta" else "red"
 
             # Menampilkan hasil dengan warna yang sesuai
-            st.markdown(f"<p style='color:{color}; font-size:20px;'><strong>{sentiment}</strong></p>", unsafe_allow_html=True)
+            st.markdown(
+    f"""
+    <div style="background-color: {background_color}; color: {text_color}; padding: 10px; border-radius: 5px;">
+        <strong>{sentiment}</strong>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
             
     elif menu == "Evaluasi Model":
         # Memisahkan data untuk pelatihan dan pengujian
