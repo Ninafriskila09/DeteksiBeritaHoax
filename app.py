@@ -105,6 +105,8 @@ def main():
 
             # Menampilkan hasil
             st.markdown(f"**{sentiment}**")
+            st.markdown("<h1 style='color: green;'>Fakta</h1>", unsafe_allow_html=True)
+            st.markdown("<p style='color: red;'>Hoax</p>", unsafe_allow_html=True)
 
     elif menu == "Evaluasi Model":
         # Memisahkan data untuk pelatihan dan pengujian
