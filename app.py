@@ -69,17 +69,6 @@ def main():
         .stApp {
             background-color: white;
         }
-        .fakta-text {
-            color: green;
-        }
-        .hoax-text {
-            color: red;
-        }
-        .centered {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
         </style>
         """,
         unsafe_allow_html=True
@@ -96,32 +85,26 @@ def main():
     X_features, y_labels, vectorizer = preprocess_data(data)
 
     if menu == "Deteksi Berita":
-        st.markdown("<div style='margin-top: 50px;'></div>", unsafe_allow_html=True)
         st.markdown("<h3 style='font-size: 24px; font-weight: bold;'>Masukkan Judul Prediksi</h3>",
                     unsafe_allow_html=True)
+        input_text = st.text_area("", height=150)
 
-        st.markdown("<div class='centered'>", unsafe_allow_html=True)
-        input_text = st.text_area("", height=120)
         detect_button = st.button("Deteksi")
-        st.markdown("</div>", unsafe_allow_html=True)
 
         if detect_button and input_text:
+            # Memisahkan data untuk pelatihan dan pengujian
             X_train, X_test, y_train, y_test = train_test_split(X_features, y_labels, test_size=0.2, random_state=42)
             model = train_model(X_train, y_train)
 
+            # Transformasi teks dengan vectorizer yang digunakan untuk melatih model
             input_text_tfidf = vectorizer.transform([input_text])
             input_text_dense = csr_matrix.toarray(input_text_tfidf)
 
+            # Prediksi menggunakan model yang telah dimuat
             prediction = model.predict(input_text_dense)
             sentiment = "Fakta" if prediction[0] == 1 else "Hoax"
 
-            st.markdown("<div class='centered'>", unsafe_allow_html=True)
-            if sentiment == "Fakta":
-                st.markdown(f"<h3 class='fakta-text'>{sentiment}</h3>", unsafe_allow_html=True)
-            else:
-                st.markdown(f"<h3 class='hoax-text'>{sentiment}</h3>", unsafe_allow_html=True)
-            st.markdown("</div>", unsafe_allow_html=True)
-
+            # Menghitung persentase
             total_count = len(data)
             fact_count = data[data['Label'] == 1].shape[0]
             hoax_count = data[data['Label'] == 0].shape[0]
@@ -129,19 +112,28 @@ def main():
             fact_percentage = (fact_count / total_count) * 100
             hoax_percentage = (hoax_count / total_count) * 100
 
-            st.markdown("<div class='centered'>", unsafe_allow_html=True)
-            st.markdown(f"<p class='fakta-text'>Persentase Fakta: {fact_percentage:.2f}%</p>", unsafe_allow_html=True)
-            st.markdown(f"<p class='hoax-text'>Persentase Hoax: {hoax_percentage:.2f}%</p>", unsafe_allow_html=True)
-            st.markdown("</div>", unsafe_allow_html=True)
+            # Menampilkan hasil dengan warna
+            if sentiment == "Fakta":
+                st.markdown(f"<h3 style='font-size: 24px; color: green; font-weight: bold;'>{sentiment}</h3>",
+                            unsafe_allow_html=True)
+            else:
+                st.markdown(f"<h3 style='font-size: 24px; color: red; font-weight: bold;'>{sentiment}</h3>",
+                            unsafe_allow_html=True)
+
+            st.write(f"Persentase Fakta: {fact_percentage:.2f}%")
+            st.write(f"Persentase Hoax: {hoax_percentage:.2f}%")
 
     elif menu == "Evaluasi Model":
+        # Memisahkan data untuk pelatihan dan pengujian
         X_train, X_test, y_train, y_test = train_test_split(X_features, y_labels, test_size=0.2, random_state=42)
         model = train_model(X_train, y_train)
 
+        # Evaluasi model
         y_pred = model.predict(csr_matrix.toarray(X_test))
         display_evaluation(y_test, y_pred)
 
     elif menu == "Visualisasi Word Cloud":
+        # Tampilkan Word Cloud di bawah hasil
         display_wordclouds(data)
 
 if __name__ == '__main__':
