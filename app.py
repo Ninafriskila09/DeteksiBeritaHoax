@@ -69,11 +69,6 @@ def main():
         .stApp {
             background-color: white;
         }
-        .centered {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
         </style>
         """,
         unsafe_allow_html=True
@@ -94,12 +89,9 @@ def main():
         st.markdown("<div style='margin-top: 50px;'></div>", unsafe_allow_html=True)
         st.markdown("<h3 style='font-size: 24px; font-weight: bold;'>Masukkan Judul Prediksi</h3>",
                     unsafe_allow_html=True)
-
-        # Menempatkan form di tengah halaman
-        st.markdown("<div class='centered'>", unsafe_allow_html=True)
         input_text = st.text_area("", height=120)
+
         detect_button = st.button("Deteksi")
-        st.markdown("</div>", unsafe_allow_html=True)
 
         if detect_button and input_text:
             # Memisahkan data untuk pelatihan dan pengujian
@@ -115,20 +107,12 @@ def main():
             sentiment = "Fakta" if prediction[0] == 1 else "Hoax"
 
             # Menampilkan hasil dengan warna
-            st.markdown("<div class='centered'>", unsafe_allow_html=True)
             if sentiment == "Fakta":
                 st.markdown(f"<h3 style='font-size: 24px; color: green; font-weight: bold;'>{sentiment}</h3>",
                             unsafe_allow_html=True)
             else:
                 st.markdown(f"<h3 style='font-size: 24px; color: red; font-weight: bold;'>{sentiment}</h3>",
                             unsafe_allow_html=True)
-            st.markdown("</div>", unsafe_allow_html=True)
-
-            # Menampilkan persentase
-            st.markdown("<div class='centered'>", unsafe_allow_html=True)
-            st.write(f"Persentase Fakta: {fact_percentage:.2f}%")
-            st.write(f"Persentase Hoax: {hoax_percentage:.2f}%")
-            st.markdown("</div>", unsafe_allow_html=True)
 
     elif menu == "Evaluasi Model":
         # Memisahkan data untuk pelatihan dan pengujian
