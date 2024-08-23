@@ -85,14 +85,15 @@ def main():
     X_features, y_labels, vectorizer = preprocess_data(data)
 
     if menu == "Deteksi Berita":
-        st.markdown("**Masukkan Judul Prediksi**")
+        st.markdown("<h3 style='font-size: 24px; font-weight: bold;'>Masukkan Judul Prediksi</h3>",
+                    unsafe_allow_html=True)
         input_text = st.text_area("", height=150)
 
         detect_button = st.button("Deteksi")
 
         if detect_button and input_text:
             # Memisahkan data untuk pelatihan dan pengujian
-            X_train, X_test, y_train, y_test = train_test_split(X_features, y_labels, test_size=0.4, random_state=50)
+            X_train, X_test, y_train, y_test = train_test_split(X_features, y_labels, test_size=0.2, random_state=42)
             model = train_model(X_train, y_train)
 
             # Transformasi teks dengan vectorizer yang digunakan untuk melatih model
@@ -101,14 +102,30 @@ def main():
 
             # Prediksi menggunakan model yang telah dimuat
             prediction = model.predict(input_text_dense)
-            sentiment = "Fakta" if prediction[0] == 0 else "Hoax"
+            sentiment = "Fakta" if prediction[0] == 1 else "Hoax"
 
-            # Menampilkan hasil
-            st.markdown(f"**{sentiment}**")
+            # Menghitung persentase
+            total_count = len(data)
+            fact_count = data[data['Label'] == 1].shape[0]
+            hoax_count = data[data['Label'] == 0].shape[0]
+
+            fact_percentage = (fact_count / total_count) * 100
+            hoax_percentage = (hoax_count / total_count) * 100
+
+            # Menampilkan hasil dengan warna
+            if sentiment == "Fakta":
+                st.markdown(f"<h3 style='font-size: 24px; color: green; font-weight: bold;'>{sentiment}</h3>",
+                            unsafe_allow_html=True)
+            else:
+                st.markdown(f"<h3 style='font-size: 24px; color: red; font-weight: bold;'>{sentiment}</h3>",
+                            unsafe_allow_html=True)
+
+            st.write(f"Persentase Fakta: {fact_percentage:.2f}%")
+            st.write(f"Persentase Hoax: {hoax_percentage:.2f}%")
 
     elif menu == "Evaluasi Model":
         # Memisahkan data untuk pelatihan dan pengujian
-        X_train, X_test, y_train, y_test = train_test_split(X_features, y_labels, test_size=0.4, random_state=50)
+        X_train, X_test, y_train, y_test = train_test_split(X_features, y_labels, test_size=0.2, random_state=42)
         model = train_model(X_train, y_train)
 
         # Evaluasi model
