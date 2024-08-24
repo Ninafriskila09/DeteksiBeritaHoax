@@ -36,29 +36,15 @@ def train_model(X_train, y_train):
     return NB
 
 def display_evaluation(y_test, y_pred):
-    # Menampilkan Classification Report
     st.write("**Classification Report:**")
     st.text(classification_report(y_test, y_pred))
 
-    # Menampilkan Confusion Matrix
-    columns = ['0', '1']  # Sesuaikan dengan label yang ada di y_test dan y_pred
-    confm = confusion_matrix(y_test, y_pred)
+    columns = sorted(y_test.unique())
+    confm = confusion_matrix(y_test, y_pred, labels=columns)
     df_cm = pd.DataFrame(confm, index=columns, columns=columns)
 
     st.write("**Confusion Matrix:**")
-    
-    # Plotting Confusion Matrix as Heatmap
-    plt.figure(figsize=(8, 6))
-    ax = sns.heatmap(df_cm, cmap='Greens', annot=True, fmt=".0f", 
-                     xticklabels=columns, yticklabels=columns)
-    ax.set_title('Confusion Matrix')
-    ax.set_xlabel('Predicted Sentiment')
-    ax.set_ylabel('True Sentiment')
-
-    # Menampilkan plot di Streamlit
-    st.pyplot(plt)
-    plt.close()  # Tutup plt untuk menghindari plot yang tumpang tindih di masa depan
-
+    st.write(df_cm)
 
 def display_wordclouds(data):
     st.write("**Word Cloud untuk Semua Data:**")
