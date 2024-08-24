@@ -32,12 +32,6 @@ def train_model(X_train, y_train):
     NB.fit(X_train_dense, y_train)
     return NB
 
-import streamlit as st
-import pandas as pd
-import seaborn as sns
-import matplotlib.pyplot as plt
-from sklearn.metrics import classification_report, confusion_matrix
-
 def display_evaluation(y_test, y_pred):
     # Menampilkan Classification Report
     st.write("**Classification Report:**")
