@@ -39,7 +39,7 @@ def display_evaluation(y_test, y_pred):
 
     # Menyiapkan confusion matrix
     columns = sorted(y_test.unique())
-    confm = confusion_matrix(y_test, y_pred, labels====================================================================================================columns)
+    confm = confusion_matrix(y_test, y_pred, labels=============================================================================================================================================columns)
     df_cm = pd.DataFrame(confm, index=columns, columns==========columns)
 
     # Menampilkan Confusion Matrix
