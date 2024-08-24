@@ -36,6 +36,10 @@ def display_evaluation(y_test, y_pred):
     confm = confusion_matrix(y_test, y_pred, labels=columns)
     df_cm = pd.DataFrame(confm, index=columns, columns=columns)
     
+import streamlit as st
+import pandas as pd
+from sklearn.metrics import classification_report, confusion_matrix
+
 def display_evaluation(y_test, y_pred):
     # Menyortir label untuk confusion matrix
     columns = sorted(y_test.unique())
@@ -44,12 +48,27 @@ def display_evaluation(y_test, y_pred):
     confm = confusion_matrix(y_test, y_pred, labels=columns)
     df_cm = pd.DataFrame(confm, index=columns, columns=columns)
     
-    # Menampilkan hasil evaluasi dalam satu kolom
-    st.write("**Classification Report:**")
-    st.text(classification_report(y_test, y_pred))
+    # Membuat DataFrame untuk y_test dan y_pred
+    df_comparison = pd.DataFrame({
+        'y_test': y_test,
+        'y_pred': y_pred
+    })
+    
+    # Menampilkan hasil evaluasi dalam kolom
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.write("**y_test dan y_pred:**")
+        st.write(df_comparison)
+    
+    with col2:
+        st.write("**Classification Report:**")
+        st.text(classification_report(y_test, y_pred))
     
     st.write("**Confusion Matrix:**")
     st.write(df_cm)
+
+
     
 def display_wordclouds(data):
     st.write("**Word Cloud untuk Semua Data:**")
