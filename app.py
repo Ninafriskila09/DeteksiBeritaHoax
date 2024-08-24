@@ -33,13 +33,19 @@ def train_model(X_train, y_train):
     return NB
 
 def display_evaluation(y_test, y_pred):
-    # Menampilkan Classification Report
-    columns = ['0', '1']
-    confm = confusion_matrix(y_test, y_pred)
+    # Menyiapkan confusion matrix
+    columns = sorted(y_test.unique())
+    confm = confusion_matrix(y_test, y_pred, labels=columns)
     df_cm = pd.DataFrame(confm, index=columns, columns=columns)
-    st.write("Classification Report:")
-    st.text(classification_report(y_test, y_pred))
     
+    # Menampilkan Classification Report
+    report = classification_report(y_test, y_pred, target_names=columns)
+    st.write("Classification Report:")
+    st.text(report)
+    
+    # Menampilkan Confusion Matrix
+    st.write("Confusion Matrix:")
+    st.dataframe(df_cm, use_container_width=True)
 
     # Menyiapkan confusion matrix
     columns = sorted(y_test.unique())
