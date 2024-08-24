@@ -16,11 +16,6 @@ dataset = pd.read_excel('dataset_clean.xlsx')
 
 def load_data():
     return dataset
-    
-    def get_summary_statistics(data):
-    num_fakta = data[data['Label'] == 1].shape[0]
-    num_hoax = data[data['Label'] == 0].shape[0]
-    return num_fakta, num_hoax
 
 def preprocess_data(data):
     X_raw = data["clean_text"]
@@ -104,17 +99,26 @@ def main():
             input_text_tfidf = vectorizer.transform([input_text])
             input_text_dense = csr_matrix.toarray(input_text_tfidf)
 
-            # Prediksi menggunakan model yang telah dimuat
+            # Prediksi dan probabilitas menggunakan model yang telah dilatih
+            prediction_probabilities = model.predict_proba(input_text_dense)
             prediction = model.predict(input_text_dense)
-            sentiment = "Fakta" if prediction[0] == 0 else "Hoax"
 
-            # Menampilkan hasil
+            # Mendapatkan probabilitas untuk setiap kelas
+            probability_fakta = prediction_probabilities[0][1]  # Probabilitas untuk kelas 1
+            probability_hoax = prediction_probabilities[0][0]   # Probabilitas untuk kelas 0
+
+            sentiment = "Fakta" if prediction[0] == 1 else "Hoax"
+
+           # Menampilkan hasil
             color = "green" if sentiment == "Fakta" else "red"
             st.markdown(f"""
-    <div style="text-align: center; background-color: {color}; color: white; padding: 10px;">
-        <strong>{sentiment}</strong>
-    </div>
-    """, unsafe_allow_html=True)
+            <div style="text-align: center; background-color: {color}; color: white; padding: 10px;">
+                <strong>{sentiment}</strong><br>
+                <span>Fakta: {probability_fakta * 100:.2f}%</span><br>
+                <span>Hoax: {probability_hoax * 100:.2f}%</span>
+            </div>
+            """, unsafe_allow_html=True)
+            
             
     elif menu == "Evaluasi Model":
         # Memisahkan data untuk pelatihan dan pengujian
@@ -128,15 +132,6 @@ def main():
     elif menu == "Visualisasi Word Cloud":
         # Tampilkan Word Cloud di bawah hasil
         display_wordclouds(data)
-def display_summary(data):
-    num_fakta, num_hoax = get_summary_statistics(data)
-    st.write(f"**Jumlah Berita Fakta:** {num_fakta}")
-    st.write(f"**Jumlah Berita Hoax:** {num_hoax}")
-    total = num_fakta + num_hoax
-    if total > 0:
-        st.write(f"**Persentase Fakta:** {num_fakta / total * 100:.2f}%")
-        st.write(f"**Persentase Hoax:** {num_hoax / total * 100:.2f}%")
-    else:
-        st.write("Data tidak tersedia.")
+
 if __name__ == '__main__':
     main()
