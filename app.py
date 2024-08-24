@@ -40,8 +40,7 @@ import streamlit as st
 import pandas as pd
 from sklearn.metrics import classification_report, confusion_matrix
 
-def (y_test, y_pred):
-    # Menyortir label untuk confusion matrix
+
     columns = sorted(y_test.unique())
     
     # Membuat confusion matrix
