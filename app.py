@@ -3,7 +3,7 @@ import pandas as pd
 import joblib
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.naive_bayes import GaussianNB
+from sklearn.naive_bayes import MultinomialNB
 from sklearn.metrics import classification_report, confusion_matrix
 from wordcloud import WordCloud
 from scipy.sparse import csr_matrix
@@ -13,6 +13,58 @@ vectorizer = joblib.load('vectorizer.pkl')
 
 # Memuat data tambahan jika diperlukan
 dataset = pd.read_excel('dataset_clean.xlsx')
+
+# Contoh pembuatan fitur TF-IDF dan pemilihan fitur
+vectorizer = TfidfVectorizer()
+X_train_TFIDF = vectorizer.fit_transform(X_train)
+X_test_TFIDF = vectorizer.transform(X_test)
+
+# Pilih fitur terbaik
+chi2_features = SelectKBest(chi2, k=1000).fit(X_train_TFIDF, y_train)
+X_train_chi2 = chi2_features.transform(X_train_TFIDF)
+X_test_chi2 = chi2_features.transform(X_test_TFIDF)
+
+# Latih model Naive Bayes
+NB = MultinomialNB()
+NB.fit(X_train_chi2, y_train)
+
+# Prediksi probabilitas
+y_probs = NB.predict_proba(X_test_chi2)
+y_pred = np.argmax(y_probs, axis=1)
+
+# Tampilkan classification report
+print(classification_report(y_test, y_pred))
+
+# Membuat confusion matrix
+confm = confusion_matrix(y_test, y_pred)
+columns = ['0', '1']
+df_cm = pd.DataFrame(confm, index=columns, columns=columns)
+
+# Visualisasi confusion matrix
+ax = sns.heatmap(df_cm, cmap='Greens', annot=True, fmt=".0f")
+ax.set_title('Confusion Matrix')
+ax.set_xlabel('Sentimen Prediksi')
+ax.set_ylabel('Sentimen Sebenarnya')
+plt.show()
+
+# Menampilkan persentase prediksi
+def display_predictions_with_probabilities(X_test_chi2, y_test, y_probs, class_labels):
+    pred_probs_df = pd.DataFrame(y_probs, columns=class_labels)
+    pred_df = pd.DataFrame({
+        'Sentimen Sebenarnya': y_test,
+        'Prediksi': np.argmax(y_probs, axis=1),
+        'Probabilitas 0': pred_probs_df['0'],
+        'Probabilitas 1': pred_probs_df['1']
+    })
+    pred_df['Probabilitas Prediksi'] = pred_df.apply(
+        lambda row: row['Probabilitas 1'] if row['Prediksi'] == 1 else row['Probabilitas 0'], axis=1
+    )
+    return pred_df
+
+# Display predictions with probabilities
+class_labels = ['0', '1']
+predictions_df = display_predictions_with_probabilities(X_test_chi2, y_test, y_probs, class_labels)
+print(predictions_df.head())
 
 def load_data():
     return dataset
