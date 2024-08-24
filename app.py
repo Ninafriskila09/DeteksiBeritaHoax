@@ -33,34 +33,29 @@ def train_model(X_train, y_train):
     return NB
 
 def display_evaluation(y_test, y_pred):
-    confm = confusion_matrix(y_test, y_pred, labels=columns)
-    df_cm = pd.DataFrame(confm, index=columns, columns=columns)
-    
-def display_evaluation(y_test, y_pred):
-    df_cm = pd.DataFrame(confm, index=columns, columns=columns)
-    st.write("Classification Report:")
+    st.write("**Classification Report:**")
     st.text(classification_report(y_test, y_pred))
 
     columns = sorted(y_test.unique())
     confm = confusion_matrix(y_test, y_pred, labels=columns)
     df_cm = pd.DataFrame(confm, index=columns, columns=columns)
 
-    st.write("Confusion Matrix:")
+    st.write("**Confusion Matrix:**")
     st.write(df_cm)
 
 def display_wordclouds(data):
-    st.write("*Word Cloud untuk Semua Data:*")
+    st.write("**Word Cloud untuk Semua Data:**")
     all_text = ' '.join(data['clean_text'])
     wordcloud_all = WordCloud(width=800, height=400, background_color='white').generate(all_text)
     st.image(wordcloud_all.to_array(), use_column_width=True)
 
-    st.write("*Word Cloud untuk Fakta:*")
+    st.write("**Word Cloud untuk Fakta:**")
     fakta = data[data['Label'] == 1]
     all_text_fakta = ' '.join(fakta['clean_text'])
     wordcloud_fakta = WordCloud(width=800, height=400, background_color='white').generate(all_text_fakta)
     st.image(wordcloud_fakta.to_array(), use_column_width=True)
 
-    st.write("*Word Cloud untuk Hoax:*")
+    st.write("**Word Cloud untuk Hoax:**")
     hoax = data[data['Label'] == 0]
     all_text_hoax = ' '.join(hoax['clean_text'])
     wordcloud_hoax = WordCloud(width=800, height=400, background_color='white').generate(all_text_hoax)
@@ -90,7 +85,7 @@ def main():
     X_features, y_labels, vectorizer = preprocess_data(data)
 
     if menu == "Deteksi Berita":
-        st.markdown("*Masukkan Judul Prediksi*")
+        st.markdown("**Masukkan Judul Prediksi**")
         input_text = st.text_area("", height=150)
 
         detect_button = st.button("Deteksi")
@@ -129,5 +124,5 @@ def main():
         # Tampilkan Word Cloud di bawah hasil
         display_wordclouds(data)
 
-if _name_ == '_main_':
+if __name__ == '__main__':
     main()
