@@ -3,7 +3,7 @@ import pandas as pd
 import joblib
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.naive_bayes import GaussianNB
+from sklearn.naive_bayes import MultinomialNB
 from sklearn.metrics import classification_report, confusion_matrix
 from wordcloud import WordCloud
 from scipy.sparse import csr_matrix
@@ -27,9 +27,8 @@ def preprocess_data(data):
     return X_TFIDF, y_raw, vectorizer
 
 def train_model(X_train, y_train):
-    NB = GaussianNB()
-    X_train_dense = csr_matrix.toarray(X_train)
-    NB.fit(X_train_dense, y_train)
+    NB = MultinomialNB()
+    NB.fit(X_train, y_train)
     return NB
 
 def display_evaluation(y_test, y_pred):
@@ -97,11 +96,10 @@ def main():
 
             # Transformasi teks dengan vectorizer yang digunakan untuk melatih model
             input_text_tfidf = vectorizer.transform([input_text])
-            input_text_dense = csr_matrix.toarray(input_text_tfidf)
 
             # Prediksi dan probabilitas menggunakan model yang telah dilatih
-            prediction_probabilities = model.predict_proba(input_text_dense)
-            prediction = model.predict(input_text_dense)
+            prediction_probabilities = model.predict_proba(input_text_tfidf)
+            prediction = model.predict(input_text_tfidf)
 
             # Mendapatkan probabilitas untuk setiap kelas
             probability_fakta = prediction_probabilities[0][1]  # Probabilitas untuk kelas 1
@@ -109,7 +107,7 @@ def main():
 
             sentiment = "Fakta" if prediction[0] == 1 else "Hoax"
 
-           # Menampilkan hasil
+            # Menampilkan hasil
             color = "green" if sentiment == "Fakta" else "red"
             st.markdown(f"""
             <div style="text-align: center; background-color: {color}; color: white; padding: 10px;">
@@ -118,15 +116,14 @@ def main():
                 <span>Hoax: {probability_hoax * 100:.2f}%</span>
             </div>
             """, unsafe_allow_html=True)
-            
-            
+
     elif menu == "Evaluasi Model":
         # Memisahkan data untuk pelatihan dan pengujian
         X_train, X_test, y_train, y_test = train_test_split(X_features, y_labels, test_size=0.2, random_state=42)
         model = train_model(X_train, y_train)
 
         # Evaluasi model
-        y_pred = model.predict(csr_matrix.toarray(X_test))
+        y_pred = model.predict(X_test)
         display_evaluation(y_test, y_pred)
 
     elif menu == "Visualisasi Word Cloud":
