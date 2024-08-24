@@ -14,7 +14,12 @@ vectorizer = joblib.load('vectorizer.pkl')
 # Memuat data tambahan jika diperlukan
 dataset = pd.read_excel('dataset_clean.xlsx')
 
-
+def train_model(X_train, y_train):
+    model = MultinomialNB()
+    X_train_dense = csr_matrix.toarray(X_train)
+    model.fit(X_train_dense, y_train)
+    return model
+    
 def load_data():
     return dataset
 
@@ -141,15 +146,18 @@ def main():
             input_text_tfidf = vectorizer.transform([input_text])
             input_text_dense = csr_matrix.toarray(input_text_tfidf)
 
-            # Prediksi menggunakan model yang telah dimuat
+            # Prediksi dan probabilitas menggunakan model yang telah dimuat
             prediction = model.predict(input_text_dense)
-            sentiment = "Fakta" if prediction[0] == 0 else "Hoax"
+            prediction_proba = model.predict_proba(input_text_dense)
+            sentiment = "Fakta" if prediction[0] == 1 else "Hoax"
+            sentiment_proba = prediction_proba[0][1] if prediction[0] == 1 else prediction_proba[0][0]
 
             # Menampilkan hasil
             color = "green" if sentiment == "Fakta" else "red"
             st.markdown(f"""
     <div style="text-align: center; background-color: {color}; color: white; padding: 10px;">
-        <strong>{sentiment}</strong>
+        <strong>{sentiment}</strong><br>
+        Probabilitas: {sentiment_proba * 100:.2f}%
     </div>
     """, unsafe_allow_html=True)
             
