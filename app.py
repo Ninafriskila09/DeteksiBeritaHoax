@@ -8,29 +8,24 @@ from sklearn.metrics import classification_report, confusion_matrix
 from wordcloud import WordCloud
 from scipy.sparse import csr_matrix
 
-# Memuat model dan vectorizer
-model = joblib.load('model.pkl')
+# Memuat model dan vectorizer yang sudah disimpan
 vectorizer = joblib.load('vectorizer.pkl')
 
-# Memuat dan preprocessing data
-data = pd.read_excel('dataset_clean.xlsx')
-X_raw = data["clean_text"]
-y_raw = data["Label"]
+# Memuat data tambahan jika diperlukan
+dataset = pd.read_excel('dataset_clean.xlsx')
 
-# Transformasi teks
-X_TFIDF = vectorizer.transform(X_raw)
+def load_data():
+    return dataset
 
-# Pembagian data
-X_train, X_test, y_train, y_test = train_test_split(X_TFIDF, y_raw, test_size=0.2, random_state=42)
+def preprocess_data(data):
+    X_raw = data["clean_text"]
+    y_raw = data["Label"]
 
-# Prediksi dan evaluasi
-y_pred = model.predict(X_test)
-print("Classification Report:")
-print(classification_report(y_test, y_pred))
-print("Confusion Matrix:")
-print(confusion_matrix(y_test, y_pred))
+    vectorizer = TfidfVectorizer(ngram_range=(1, 2))
+    X_TFIDF = vectorizer.fit_transform(X_raw)
 
-    
+    return X_TFIDF, y_raw, vectorizer
+
 def train_model(X_train, y_train):
     NB = GaussianNB()
     X_train_dense = csr_matrix.toarray(X_train)
@@ -53,7 +48,23 @@ def display_evaluation(y_test, y_pred):
     st.write("Confusion Matrix:")
     st.write(df_cm)
 
+def display_wordclouds(data):
+    st.write("*Word Cloud untuk Semua Data:*")
+    all_text = ' '.join(data['clean_text'])
+    wordcloud_all = WordCloud(width=800, height=400, background_color='white').generate(all_text)
+    st.image(wordcloud_all.to_array(), use_column_width=True)
 
+    st.write("*Word Cloud untuk Fakta:*")
+    fakta = data[data['Label'] == 1]
+    all_text_fakta = ' '.join(fakta['clean_text'])
+    wordcloud_fakta = WordCloud(width=800, height=400, background_color='white').generate(all_text_fakta)
+    st.image(wordcloud_fakta.to_array(), use_column_width=True)
+
+    st.write("*Word Cloud untuk Hoax:*")
+    hoax = data[data['Label'] == 0]
+    all_text_hoax = ' '.join(hoax['clean_text'])
+    wordcloud_hoax = WordCloud(width=800, height=400, background_color='white').generate(all_text_hoax)
+    st.image(wordcloud_hoax.to_array(), use_column_width=True)
 
 def main():
     # Mengubah background menjadi putih dengan CSS
@@ -79,7 +90,7 @@ def main():
     X_features, y_labels, vectorizer = preprocess_data(data)
 
     if menu == "Deteksi Berita":
-        st.markdown("**Masukkan Judul Prediksi**")
+        st.markdown("*Masukkan Judul Prediksi*")
         input_text = st.text_area("", height=150)
 
         detect_button = st.button("Deteksi")
@@ -118,5 +129,5 @@ def main():
         # Tampilkan Word Cloud di bawah hasil
         display_wordclouds(data)
 
-if __name__ == '__main__':
+if _name_ == '_main_':
     main()
