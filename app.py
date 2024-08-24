@@ -10,6 +10,9 @@ import matplotlib.pyplot as plt
 # Memuat model dan vectorizer yang sudah disimpan
 vectorizer = joblib.load('tfidf_vectorizer.pkl')
 model = joblib.load('multinomial_nb_model.pkl')
+vectorizer = joblib.load('vectorizer.pkl')
+model = joblib.load('model.pkl')
+
 
 # Memuat data tambahan jika diperlukan
 dataset = pd.read_excel('dataset_clean.xlsx')
