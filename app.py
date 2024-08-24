@@ -36,12 +36,7 @@ def display_evaluation(y_test, y_pred):
     confm = confusion_matrix(y_test, y_pred, labels=columns)
     df_cm = pd.DataFrame(confm, index=columns, columns=columns)
     
-import streamlit as st
-import pandas as pd
-from sklearn.metrics import classification_report, confusion_matrix
 
-
-    columns = sorted(y_test.unique())
     
     # Membuat confusion matrix
     confm = confusion_matrix(y_test, y_pred, labels=columns)
