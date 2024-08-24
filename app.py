@@ -36,45 +36,47 @@ def display_evaluation(y_test, y_pred):
     confm = confusion_matrix(y_test, y_pred, labels=columns)
     df_cm = pd.DataFrame(confm, index=columns, columns=columns)
     
-import streamlit as st
-import pandas as pd
-from sklearn.metrics import classification_report, confusion_matrix
 
-import pandas as pd
-from sklearn.metrics import classification_report, confusion_matrix
-import seaborn as sns
-import matplotlib.pyplot as plt
+# Function to display classification report and confusion matrix
+def display_metrics(y_test, y_pred):
+    # Classification report
+    st.subheader('Classification Report')
+    report = classification_report(y_test, y_pred, output_dict=True)
+    st.text(classification_report(y_test, y_pred))
 
-# Ensure that y_test and y_pred have the same length
-assert len(y_test) == len(y_pred), "y_test and y_pred must be of the same length"
+    # Confusion matrix
+    confm = confusion_matrix(y_test, y_pred)
+    df_cm = pd.DataFrame(confm, index=['0', '1'], columns=['0', '1'])
 
-# Print classification report
-print("Classification Report:\n", classification_report(y_test, y_pred))
+    st.subheader('Confusion Matrix')
+    fig, ax = plt.subplots()
+    sns.heatmap(df_cm, cmap='Greens', annot=True, fmt=".0f", ax=ax)
+    ax.set_title('Confusion Matrix')
+    ax.set_xlabel('Predicted Sentiment')
+    ax.set_ylabel('True Sentiment')
 
-# Create a DataFrame for y_test and y_pred to compare them side-by-side
-comparison_df = pd.DataFrame({
-    'y_test': y_test,
-    'y_pred': y_pred
-})
-print("\nComparison of y_test and y_pred:\n", comparison_df.head())
+    # Move x-axis labels to the right if needed
+    # ax.invert_xaxis()  # Uncomment if needed
 
-# Compute confusion matrix
-confm = confusion_matrix(y_test, y_pred)
+    st.pyplot(fig)
 
-# Define column names based on the labels in your classification task
-columns = ['0', '1']
-df_cm = pd.DataFrame(confm, index=columns, columns=columns)
+# Sample data for demonstration (replace with your actual data)
+# For demonstration purposes, generate some sample y_test and y_pred
+def generate_sample_data():
+    import numpy as np
+    np.random.seed(0)
+    y_test = np.random.randint(0, 2, 100)
+    y_pred = np.random.randint(0, 2, 100)
+    return y_test, y_pred
 
-# Print confusion matrix DataFrame
-print("\nConfusion Matrix:\n", df_cm)
+# Streamlit app layout
+st.title('Model Evaluation Dashboard')
 
-# Plot the confusion matrix
-plt.figure(figsize=(8, 6))
-sns.heatmap(df_cm, annot=True, fmt='d', cmap='Blues', xticklabels=columns, yticklabels=columns)
-plt.xlabel('Predicted Labels')
-plt.ylabel('True Labels')
-plt.title('Confusion Matrix')
-plt.show()
+# Generate sample data or load your actual data
+y_test, y_pred = generate_sample_data()  # Replace with actual data loading
+
+# Display metrics
+display_metrics(y_test, y_pred)
 
 
         
