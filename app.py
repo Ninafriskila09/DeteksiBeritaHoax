@@ -61,8 +61,7 @@ def plot_probabilities(probabilities):
 
 def main():
     # Mengubah background menjadi putih dengan CSS
-    st.markdown(
-        """
+    st.markdown("""
         <style>
         .stApp {
             background-color: white;
