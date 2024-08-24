@@ -6,8 +6,9 @@ from sklearn.metrics import classification_report, confusion_matrix
 from wordcloud import WordCloud
 
 # Memuat model dan vectorizer yang sudah disimpan
-vectorizer = joblib.load('vectorizer.pkl')
-model = joblib.load('model.pkl')  # Pastikan model yang disimpan adalah MultinomialNB
+vectorizer = joblib.load('tfidf_vectorizer.pkl')
+model = joblib.load('multinomial_nb_model.pkl') # Pastikan model yang disimpan adalah MultinomialNB
+
 
 # Debugging untuk memeriksa tipe objek
 print(f"Loaded model type: {type(model)}")
