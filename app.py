@@ -13,6 +13,7 @@ import seaborn as sns
 
 # Memuat model dan vectorizer yang sudah disimpan
 vectorizer = joblib.load('vectorizer.pkl')
+model = joblib.load('model.pkl')
 
 # Memuat data tambahan jika diperlukan
 dataset = pd.read_excel('dataset_clean.xlsx')
