@@ -32,21 +32,19 @@ def train_model(X_train, y_train):
     NB.fit(X_train_dense, y_train)
     return NB
 
+def display_evaluation(y_test, y_pred):
+    # Menampilkan Classification Report
+    st.write("Classification Report:")
+    st.text(classification_report(y_test, y_pred))
 
+    # Menyiapkan confusion matrix
+    columns = sorted(y_test.unique())
+    confm = confusion_matrix(y_test, y_pred, labels=columns)
+    df_cm = pd.DataFrame(confm, index=columns, columns=columns)
 
-# Misalkan y_test dan y_pred sudah didefinisikan
-
-# Mengambil label unik dari y_test dan mengurutkannya
-columns = sorted(y_test.unique())
-
-# Menghitung confusion matrix
-confm = confusion_matrix(y_test, y_pred, labels=columns)
-
-# Membuat DataFrame dari confusion matrix dengan index dan kolom yang sesuai
-df_cm = pd.DataFrame(confm, index=columns, columns=columns)
-
-# Menampilkan DataFrame
-print(df_cm)
+    # Menampilkan Confusion Matrix
+    st.write("Confusion Matrix:")
+    st.dataframe(df_cm, use_container_width=True)
 
 
 def display_wordclouds(data):
