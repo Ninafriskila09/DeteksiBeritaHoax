@@ -2,14 +2,16 @@ import streamlit as st
 import pandas as pd
 import joblib
 from sklearn.model_selection import train_test_split
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.naive_bayes import MultinomialNB
 from sklearn.metrics import classification_report, confusion_matrix
 from wordcloud import WordCloud
 
 # Memuat model dan vectorizer yang sudah disimpan
 vectorizer = joblib.load('vectorizer.pkl')
 model = joblib.load('model.pkl')  # Pastikan model yang disimpan adalah MultinomialNB
+
+# Debugging untuk memeriksa tipe objek
+print(f"Loaded model type: {type(model)}")
+print(f"Loaded vectorizer type: {type(vectorizer)}")
 
 # Memuat data tambahan jika diperlukan
 dataset = pd.read_excel('dataset_clean.xlsx')
@@ -86,25 +88,31 @@ def main():
             # Transformasi teks dengan vectorizer yang digunakan untuk melatih model
             input_text_tfidf = vectorizer.transform([input_text])
 
+            # Debugging untuk memeriksa bentuk data yang diproses
+            print(f"Input text TF-IDF shape: {input_text_tfidf.shape}")
+
             # Prediksi dan probabilitas menggunakan model yang telah dilatih
-            prediction_probabilities = model.predict_proba(input_text_tfidf)
-            prediction = model.predict(input_text_tfidf)
+            if hasattr(model, 'predict_proba'):
+                prediction_probabilities = model.predict_proba(input_text_tfidf)
+                prediction = model.predict(input_text_tfidf)
 
-            # Mendapatkan probabilitas untuk setiap kelas
-            probability_fakta = prediction_probabilities[0][1]  # Probabilitas untuk kelas 1
-            probability_hoax = prediction_probabilities[0][0]   # Probabilitas untuk kelas 0
+                # Mendapatkan probabilitas untuk setiap kelas
+                probability_fakta = prediction_probabilities[0][1]  # Probabilitas untuk kelas 1
+                probability_hoax = prediction_probabilities[0][0]   # Probabilitas untuk kelas 0
 
-            sentiment = "Fakta" if prediction[0] == 1 else "Hoax"
+                sentiment = "Fakta" if prediction[0] == 1 else "Hoax"
 
-            # Menampilkan hasil
-            color = "green" if sentiment == "Fakta" else "red"
-            st.markdown(f"""
-            <div style="text-align: center; background-color: {color}; color: white; padding: 10px;">
-                <strong>{sentiment}</strong><br>
-                <span>Fakta: {probability_fakta * 100:.2f}%</span><br>
-                <span>Hoax: {probability_hoax * 100:.2f}%</span>
-            </div>
-            """, unsafe_allow_html=True)
+                # Menampilkan hasil
+                color = "green" if sentiment == "Fakta" else "red"
+                st.markdown(f"""
+                <div style="text-align: center; background-color: {color}; color: white; padding: 10px;">
+                    <strong>{sentiment}</strong><br>
+                    <span>Fakta: {probability_fakta * 100:.2f}%</span><br>
+                    <span>Hoax: {probability_hoax * 100:.2f}%</span>
+                </div>
+                """, unsafe_allow_html=True)
+            else:
+                st.error("Model tidak memiliki metode predict_proba.")
 
     elif menu == "Evaluasi Model":
         # Memisahkan data untuk pelatihan dan pengujian
