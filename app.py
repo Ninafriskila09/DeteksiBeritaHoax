@@ -8,24 +8,29 @@ from sklearn.metrics import classification_report, confusion_matrix
 from wordcloud import WordCloud
 from scipy.sparse import csr_matrix
 
-# Memuat model dan vectorizer yang sudah disimpan
+# Memuat model dan vectorizer
+model = joblib.load('model.pkl')
 vectorizer = joblib.load('vectorizer.pkl')
 
-# Memuat data tambahan jika diperlukan
-dataset = pd.read_excel('dataset_clean.xlsx')
+# Memuat dan preprocessing data
+data = pd.read_excel('dataset_clean.xlsx')
+X_raw = data["clean_text"]
+y_raw = data["Label"]
 
-def load_data():
-    return dataset
+# Transformasi teks
+X_TFIDF = vectorizer.transform(X_raw)
 
-def preprocess_data(data):
-    X_raw = data["clean_text"]
-    y_raw = data["Label"]
+# Pembagian data
+X_train, X_test, y_train, y_test = train_test_split(X_TFIDF, y_raw, test_size=0.2, random_state=42)
 
-    vectorizer = TfidfVectorizer(ngram_range=(1, 2))
-    X_TFIDF = vectorizer.fit_transform(X_raw)
+# Prediksi dan evaluasi
+y_pred = model.predict(X_test)
+print("Classification Report:")
+print(classification_report(y_test, y_pred))
+print("Confusion Matrix:")
+print(confusion_matrix(y_test, y_pred))
 
-    return X_TFIDF, y_raw, vectorizer
-
+    
 def train_model(X_train, y_train):
     NB = GaussianNB()
     X_train_dense = csr_matrix.toarray(X_train)
