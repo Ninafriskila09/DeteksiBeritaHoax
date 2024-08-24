@@ -1,12 +1,15 @@
 import streamlit as st
 import pandas as pd
 import joblib
+import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.metrics import classification_report, confusion_matrix
 from wordcloud import WordCloud
 from scipy.sparse import csr_matrix
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 # Memuat model dan vectorizer yang sudah disimpan
 vectorizer = joblib.load('vectorizer.pkl')
@@ -14,12 +17,6 @@ vectorizer = joblib.load('vectorizer.pkl')
 # Memuat data tambahan jika diperlukan
 dataset = pd.read_excel('dataset_clean.xlsx')
 
-def train_model(X_train, y_train):
-    model = MultinomialNB()
-    X_train_dense = csr_matrix.toarray(X_train)
-    model.fit(X_train_dense, y_train)
-    return model
-    
 def load_data():
     return dataset
 
@@ -33,59 +30,34 @@ def preprocess_data(data):
     return X_TFIDF, y_raw, vectorizer
 
 def train_model(X_train, y_train):
-    NB = GaussianNB()
+    model = MultinomialNB()
     X_train_dense = csr_matrix.toarray(X_train)
-    NB.fit(X_train_dense, y_train)
-    return NB
+    model.fit(X_train_dense, y_train)
+    return model
 
-def display_evaluation(y_test, y_pred):
-    confm = confusion_matrix(y_test, y_pred, labels=columns)
-    df_cm = pd.DataFrame(confm, index=columns, columns=columns)
-    
-
-# Function to display classification report and confusion matrix
 def display_metrics(y_test, y_pred):
-    # Classification report
     st.subheader('Classification Report')
     report = classification_report(y_test, y_pred, output_dict=True)
     st.text(classification_report(y_test, y_pred))
 
-    # Confusion matrix
+    st.subheader('Confusion Matrix')
     confm = confusion_matrix(y_test, y_pred)
     df_cm = pd.DataFrame(confm, index=['0', '1'], columns=['0', '1'])
 
-    st.subheader('Confusion Matrix')
     fig, ax = plt.subplots()
     sns.heatmap(df_cm, cmap='Greens', annot=True, fmt=".0f", ax=ax)
     ax.set_title('Confusion Matrix')
     ax.set_xlabel('Predicted Sentiment')
     ax.set_ylabel('True Sentiment')
 
-    # Move x-axis labels to the right if needed
-    # ax.invert_xaxis()  # Uncomment if needed
-
     st.pyplot(fig)
 
-# Sample data for demonstration (replace with your actual data)
-# For demonstration purposes, generate some sample y_test and y_pred
 def generate_sample_data():
-    import numpy as np
     np.random.seed(0)
     y_test = np.random.randint(0, 2, 100)
     y_pred = np.random.randint(0, 2, 100)
     return y_test, y_pred
 
-# Streamlit app layout
-st.title('Model Evaluation Dashboard')
-
-# Generate sample data or load your actual data
-y_test, y_pred = generate_sample_data()  # Replace with actual data loading
-
-# Display metrics
-display_metrics(y_test, y_pred)
-
-
-        
 def display_wordclouds(data):
     st.write("**Word Cloud untuk Semua Data:**")
     all_text = ' '.join(data['clean_text'])
@@ -109,7 +81,6 @@ def display_wordclouds(data):
     st.image(wordcloud_hoax.to_array(), use_column_width=True)
 
 def main():
-    # Mengubah background menjadi putih dengan CSS
     st.markdown(
         """
         <style>
@@ -124,10 +95,8 @@ def main():
     st.markdown("<h2 style='text-align: center;'>Sistem Deteksi Berita Hoax Naive Bayes</h2>",
                 unsafe_allow_html=True)
 
-    # Sidebar menu
     menu = st.sidebar.radio("Pilih Menu", ["Deteksi Berita", "Evaluasi Model", "Visualisasi Word Cloud"])
 
-    # Load data dan preprocess
     data = load_data()
     X_features, y_labels, vectorizer = preprocess_data(data)
 
@@ -138,21 +107,18 @@ def main():
         detect_button = st.button("Deteksi")
 
         if detect_button and input_text:
-            # Memisahkan data untuk pelatihan dan pengujian
             X_train, X_test, y_train, y_test = train_test_split(X_features, y_labels, test_size=0.2, random_state=42)
             model = train_model(X_train, y_train)
 
-            # Transformasi teks dengan vectorizer yang digunakan untuk melatih model
             input_text_tfidf = vectorizer.transform([input_text])
             input_text_dense = csr_matrix.toarray(input_text_tfidf)
 
-            # Prediksi dan probabilitas menggunakan model yang telah dimuat
+            # Get prediction and probability
             prediction = model.predict(input_text_dense)
             prediction_proba = model.predict_proba(input_text_dense)
             sentiment = "Fakta" if prediction[0] == 1 else "Hoax"
             sentiment_proba = prediction_proba[0][1] if prediction[0] == 1 else prediction_proba[0][0]
 
-            # Menampilkan hasil
             color = "green" if sentiment == "Fakta" else "red"
             st.markdown(f"""
     <div style="text-align: center; background-color: {color}; color: white; padding: 10px;">
@@ -162,16 +128,13 @@ def main():
     """, unsafe_allow_html=True)
             
     elif menu == "Evaluasi Model":
-        # Memisahkan data untuk pelatihan dan pengujian
         X_train, X_test, y_train, y_test = train_test_split(X_features, y_labels, test_size=0.2, random_state=42)
         model = train_model(X_train, y_train)
 
-        # Evaluasi model
         y_pred = model.predict(csr_matrix.toarray(X_test))
-        display_evaluation(y_test, y_pred)
+        display_metrics(y_test, y_pred)
 
     elif menu == "Visualisasi Word Cloud":
-        # Tampilkan Word Cloud di bawah hasil
         display_wordclouds(data)
 
 if __name__ == '__main__':
