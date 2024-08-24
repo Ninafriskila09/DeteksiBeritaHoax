@@ -36,12 +36,18 @@ def display_evaluation(y_test, y_pred):
     st.write("**Classification Report:**")
     st.text(classification_report(y_test, y_pred))
 
-    columns = sorted(y_test.unique())
-    confm = confusion_matrix(y_test, y_pred, labels=columns)
-    df_cm = pd.DataFrame(confm, index=columns, columns=columns)
+    # Mendapatkan urutan label yang benar dari data uji
+    labels = sorted(set(y_test))
+    
+    # Menghitung confusion matrix
+    confm = confusion_matrix(y_test, y_pred, labels=labels)
+    
+    # Membuat DataFrame dari confusion matrix
+    df_cm = pd.DataFrame(confm, index=[f'Label {label}' for label in labels], columns=[f'Predicted {label}' for label in labels])
 
     st.write("**Confusion Matrix:**")
     st.write(df_cm)
+
 
 def display_wordclouds(data):
     st.write("**Word Cloud untuk Semua Data:**")
