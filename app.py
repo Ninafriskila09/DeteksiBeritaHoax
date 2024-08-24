@@ -40,37 +40,42 @@ import streamlit as st
 import pandas as pd
 from sklearn.metrics import classification_report, confusion_matrix
 
-def display_evaluation(y_test, y_pred):
-    # Menyortir label untuk confusion matrix
-    columns = sorted(y_test.unique())
-    
-    # Membuat confusion matrix
-    confm = confusion_matrix(y_test, y_pred, labels=columns)
-    df_cm = pd.DataFrame(confm, index=columns, columns=columns)
-    
-    # Mengonversi classification_report ke DataFrame
-    report_dict = classification_report(y_test, y_pred, output_dict=True)
-    df_report = pd.DataFrame(report_dict).transpose()
-    
-    # Membuat DataFrame untuk y_test dan y_pred
-    df_comparison = pd.DataFrame({
-        'y_test': y_test,
-        'y_pred': y_pred
-    })
+import pandas as pd
+from sklearn.metrics import classification_report, confusion_matrix
+import seaborn as sns
+import matplotlib.pyplot as plt
 
-    # Menampilkan hasil evaluasi dalam kolom
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        st.write("**y_test dan y_pred:**")
-        st.write(df_comparison)
-    
-    with col2:
-        st.write("**Classification Report:**")
-        st.write(df_report)
-    
-    st.write("**Confusion Matrix:**")
-    st.write(df_cm)
+# Ensure that y_test and y_pred have the same length
+assert len(y_test) == len(y_pred), "y_test and y_pred must be of the same length"
+
+# Print classification report
+print("Classification Report:\n", classification_report(y_test, y_pred))
+
+# Create a DataFrame for y_test and y_pred to compare them side-by-side
+comparison_df = pd.DataFrame({
+    'y_test': y_test,
+    'y_pred': y_pred
+})
+print("\nComparison of y_test and y_pred:\n", comparison_df.head())
+
+# Compute confusion matrix
+confm = confusion_matrix(y_test, y_pred)
+
+# Define column names based on the labels in your classification task
+columns = ['0', '1']
+df_cm = pd.DataFrame(confm, index=columns, columns=columns)
+
+# Print confusion matrix DataFrame
+print("\nConfusion Matrix:\n", df_cm)
+
+# Plot the confusion matrix
+plt.figure(figsize=(8, 6))
+sns.heatmap(df_cm, annot=True, fmt='d', cmap='Blues', xticklabels=columns, yticklabels=columns)
+plt.xlabel('Predicted Labels')
+plt.ylabel('True Labels')
+plt.title('Confusion Matrix')
+plt.show()
+
 
         
 def display_wordclouds(data):
