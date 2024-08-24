@@ -32,23 +32,14 @@ def train_model(X_train, y_train):
     NB.fit(X_train_dense, y_train)
     return NB
 
-def display_evaluation(y_test, y_pred):
-    # Menampilkan laporan klasifikasi
-    st.write("**Classification Report:**")
-    st.text(classification_report(y_test, y_pred))
+def preprocess_and_transform(X_train_TFIDF, X_test_TFIDF):
+    # Preprocessing dan transformasi
+    X_train_chi2 = chi2_features.transform(X_train_TFIDF)
+    X_test_chi2 = chi2_features.transform(X_test_TFIDF)
+    return X_train_chi2, X_test_chi2
 
-    # Mengambil label unik dari data uji dan prediksi
-    labels = sorted(set(y_test) | set(y_pred))  # Menggabungkan label dari y_test dan y_pred
-
-    # Menghitung confusion matrix
-    confm = confusion_matrix(y_test, y_pred, labels=labels)
-    
-    # Membuat DataFrame dari confusion matrix dengan label yang konsisten
-    df_cm = pd.DataFrame(confm, index=labels, columns=labels)
-
-    st.write("**Confusion Matrix:**")
-    st.dataframe(df_cm)  # Menggunakan st.dataframe untuk tampilan tabel yang interaktif
-
+# Contoh penggunaan fungsi
+X_train_chi2, X_test_chi2 = preprocess_and_transform(X_train_TFIDF, X_test_TFIDF)
 
 def display_wordclouds(data):
     st.write("**Word Cloud untuk Semua Data:**")
