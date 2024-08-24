@@ -113,23 +113,27 @@ def main():
             input_text_tfidf = vectorizer.transform([input_text])
             input_text_dense = csr_matrix.toarray(input_text_tfidf)
 
-            # Get prediction and probability
+            # Get prediction and probabilities
             prediction = model.predict(input_text_dense)
             prediction_proba = model.predict_proba(input_text_dense)
             
-            # Determine sentiment and its probability
+            # Extract probabilities for both classes
+            proba_fakta = prediction_proba[0][1] * 100  # Probability of class 1
+            proba_hoax = prediction_proba[0][0] * 100   # Probability of class 0
+
+            # Determine sentiment
             if prediction[0] == 1:
                 sentiment = "Fakta"
-                sentiment_proba = prediction_proba[0][1] * 100
+                color = "green"
             else:
                 sentiment = "Hoax"
-                sentiment_proba = prediction_proba[0][0] * 100
+                color = "red"
 
-            color = "green" if sentiment == "Fakta" else "red"
             st.markdown(f"""
     <div style="text-align: center; background-color: {color}; color: white; padding: 10px;">
         <strong>{sentiment}</strong><br>
-        Probabilitas: {sentiment_proba:.2f}%
+        Probabilitas Fakta: {proba_fakta:.2f}%<br>
+        Probabilitas Hoax: {proba_hoax:.2f}%
     </div>
     """, unsafe_allow_html=True)
             
