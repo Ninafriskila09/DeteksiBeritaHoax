@@ -38,24 +38,19 @@ def display_evaluation(y_test, y_pred):
     confm = confusion_matrix(y_test, y_pred, labels=columns)
     df_cm = pd.DataFrame(confm, index=columns, columns=columns)
     
-    # Menampilkan Classification Report
-    report = classification_report(y_test, y_pred, target_names=columns)
+def display_evaluation(y_test, y_pred):
+    columns = sorted(y_test.unique())
+    confm = confusion_matrix(y_test, y_pred, labels=columns)
+    df_cm = pd.DataFrame(confm, index=columns, columns=columns)
     st.write("Classification Report:")
-    st.text(report)
-    
-    # Menampilkan Confusion Matrix
-    st.write("Confusion Matrix:")
-    st.dataframe(df_cm, use_container_width=True)
+    st.text(classification_report(y_test, y_pred))
 
-    # Menyiapkan confusion matrix
     columns = sorted(y_test.unique())
     confm = confusion_matrix(y_test, y_pred, labels=columns)
     df_cm = pd.DataFrame(confm, index=columns, columns=columns)
 
-    # Menampilkan Confusion Matrix
     st.write("Confusion Matrix:")
-    st.dataframe(df_cm, use_container_width=True)
-
+    st.write(df_cm)
 
 def display_wordclouds(data):
     st.write("**Word Cloud untuk Semua Data:**")
