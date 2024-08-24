@@ -1,18 +1,16 @@
 import streamlit as st
 import pandas as pd
 import joblib
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.naive_bayes import MultinomialNB
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report, confusion_matrix
 from wordcloud import WordCloud
+import matplotlib.pyplot as plt
 
 # Memuat model dan vectorizer yang sudah disimpan
 vectorizer = joblib.load('tfidf_vectorizer.pkl')
-model = joblib.load('multinomial_nb_model.pkl') # Pastikan model yang disimpan adalah MultinomialNB
-
-
-# Debugging untuk memeriksa tipe objek
-print(f"Loaded model type: {type(model)}")
-print(f"Loaded vectorizer type: {type(vectorizer)}")
+model = joblib.load('multinomial_nb_model.pkl')
 
 # Memuat data tambahan jika diperlukan
 dataset = pd.read_excel('dataset_clean.xlsx')
@@ -23,18 +21,15 @@ def load_data():
 def preprocess_data(data, vectorizer):
     X_raw = data["clean_text"]
     y_raw = data["Label"]
-
-    X_TFIDF = vectorizer.transform(X_raw)  # Gunakan vectorizer yang telah dimuat
+    X_TFIDF = vectorizer.transform(X_raw)
     return X_TFIDF, y_raw
 
 def display_evaluation(y_test, y_pred):
     st.write("**Classification Report:**")
     st.text(classification_report(y_test, y_pred))
-
     columns = sorted(y_test.unique())
     confm = confusion_matrix(y_test, y_pred, labels=columns)
     df_cm = pd.DataFrame(confm, index=columns, columns=columns)
-
     st.write("**Confusion Matrix:**")
     st.write(df_cm)
 
@@ -82,27 +77,21 @@ def main():
     if menu == "Deteksi Berita":
         st.markdown("**Masukkan Judul Prediksi**")
         input_text = st.text_area("", height=150)
-
         detect_button = st.button("Deteksi")
 
         if detect_button and input_text:
             # Transformasi teks dengan vectorizer yang digunakan untuk melatih model
             input_text_tfidf = vectorizer.transform([input_text])
-
             # Debugging untuk memeriksa bentuk data yang diproses
             print(f"Input text TF-IDF shape: {input_text_tfidf.shape}")
-
             # Prediksi dan probabilitas menggunakan model yang telah dilatih
             if hasattr(model, 'predict_proba'):
                 prediction_probabilities = model.predict_proba(input_text_tfidf)
                 prediction = model.predict(input_text_tfidf)
-
                 # Mendapatkan probabilitas untuk setiap kelas
-                probability_fakta = prediction_probabilities[0][1]  # Probabilitas untuk kelas 1
-                probability_hoax = prediction_probabilities[0][0]   # Probabilitas untuk kelas 0
-
+                probability_fakta = prediction_probabilities[0][1]
+                probability_hoax = prediction_probabilities[0][0]
                 sentiment = "Fakta" if prediction[0] == 1 else "Hoax"
-
                 # Menampilkan hasil
                 color = "green" if sentiment == "Fakta" else "red"
                 st.markdown(f"""
@@ -112,6 +101,8 @@ def main():
                     <span>Hoax: {probability_hoax * 100:.2f}%</span>
                 </div>
                 """, unsafe_allow_html=True)
+                # Tampilkan grafik probabilitas
+                plot_probabilities([probability_hoax, probability_fakta])
             else:
                 # Jika model tidak memiliki predict_proba, gunakan predict saja
                 prediction = model.predict(input_text_tfidf)
@@ -125,14 +116,9 @@ def main():
     elif menu == "Evaluasi Model":
         # Memisahkan data untuk pelatihan dan pengujian
         X_train, X_test, y_train, y_test = train_test_split(X_features, y_labels, test_size=0.2, random_state=42)
-        
         # Evaluasi model
         y_pred = model.predict(X_test)
         display_evaluation(y_test, y_pred)
 
     elif menu == "Visualisasi Word Cloud":
         # Tampilkan Word Cloud di bawah hasil
-        display_wordclouds(data)
-
-if __name__ == '__main__':
-    main()
