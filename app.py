@@ -33,6 +33,19 @@ def train_model(X_train, y_train):
     return NB
 
 def display_evaluation(y_test, y_pred):
+X_test_chi2 = chi2_features.transform(X_test_TFIDF)
+y_pred = NB.predict(X_test_chi2)
+print(classification_report(y_test, y_pred))
+
+columns = ['0', '1']
+confm = confusion_matrix(y_test, y_pred)
+df_cm = pd.DataFrame(confm, index=columns, columns=columns)
+
+ax = sn.heatmap(df_cm, cmap='Greens', annot=True, fmt=".0f")
+ax.set_title('Confusion matrix')
+ax.set_xlabel('Sentiment sebenarnya')
+ax.set_ylabel('Sentiment prediksi')
+    
     st.write("**Classification Report:**")
     st.text(classification_report(y_test, y_pred))
 
