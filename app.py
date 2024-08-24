@@ -3,7 +3,7 @@ import pandas as pd
 import joblib
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.naive_bayes import MultinomialNB  # Ubah ke MultinomialNB
+from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import classification_report, confusion_matrix
 from wordcloud import WordCloud
 from scipy.sparse import csr_matrix
@@ -16,6 +16,11 @@ dataset = pd.read_excel('dataset_clean.xlsx')
 
 def load_data():
     return dataset
+    
+    def get_summary_statistics(data):
+    num_fakta = data[data['Label'] == 1].shape[0]
+    num_hoax = data[data['Label'] == 0].shape[0]
+    return num_fakta, num_hoax
 
 def preprocess_data(data):
     X_raw = data["clean_text"]
@@ -27,8 +32,9 @@ def preprocess_data(data):
     return X_TFIDF, y_raw, vectorizer
 
 def train_model(X_train, y_train):
-    NB = MultinomialNB()  # Ubah ke MultinomialNB
-    NB.fit(X_train, y_train)
+    NB = GaussianNB()
+    X_train_dense = csr_matrix.toarray(X_train)
+    NB.fit(X_train_dense, y_train)
     return NB
 
 def display_evaluation(y_test, y_pred):
@@ -96,17 +102,11 @@ def main():
 
             # Transformasi teks dengan vectorizer yang digunakan untuk melatih model
             input_text_tfidf = vectorizer.transform([input_text])
-            
-            # Prediksi probabilitas
-            probas = model.predict_proba(input_text_tfidf)
-            probas_df = pd.DataFrame(probas, columns=model.classes_)
-            probas_df = probas_df.T.reset_index()
-            probas_df.columns = ['Label', 'Probability']
-            probas_df = probas_df.sort_values(by='Probability', ascending=False)
-            
-            # Prediksi kelas
-            prediction = model.predict(input_text_tfidf)
-            sentiment = "Fakta" if prediction[0] == 1 else "Hoax"
+            input_text_dense = csr_matrix.toarray(input_text_tfidf)
+
+            # Prediksi menggunakan model yang telah dimuat
+            prediction = model.predict(input_text_dense)
+            sentiment = "Fakta" if prediction[0] == 0 else "Hoax"
 
             # Menampilkan hasil
             color = "green" if sentiment == "Fakta" else "red"
@@ -115,23 +115,28 @@ def main():
         <strong>{sentiment}</strong>
     </div>
     """, unsafe_allow_html=True)
-
-            # Menampilkan presentasi probabilitas
-            st.write("**Probabilitas Kelas:**")
-            st.table(probas_df)
-
+            
     elif menu == "Evaluasi Model":
         # Memisahkan data untuk pelatihan dan pengujian
         X_train, X_test, y_train, y_test = train_test_split(X_features, y_labels, test_size=0.2, random_state=42)
         model = train_model(X_train, y_train)
 
         # Evaluasi model
-        y_pred = model.predict(X_test)
+        y_pred = model.predict(csr_matrix.toarray(X_test))
         display_evaluation(y_test, y_pred)
 
     elif menu == "Visualisasi Word Cloud":
         # Tampilkan Word Cloud di bawah hasil
         display_wordclouds(data)
-
+def display_summary(data):
+    num_fakta, num_hoax = get_summary_statistics(data)
+    st.write(f"**Jumlah Berita Fakta:** {num_fakta}")
+    st.write(f"**Jumlah Berita Hoax:** {num_hoax}")
+    total = num_fakta + num_hoax
+    if total > 0:
+        st.write(f"**Persentase Fakta:** {num_fakta / total * 100:.2f}%")
+        st.write(f"**Persentase Hoax:** {num_hoax / total * 100:.2f}%")
+    else:
+        st.write("Data tidak tersedia.")
 if __name__ == '__main__':
     main()
