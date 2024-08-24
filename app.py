@@ -31,7 +31,7 @@ def train_model(X_train, y_train):
     X_train_dense = csr_matrix.toarray(X_train)
     NB.fit(X_train_dense, y_train)
     return NB
-    
+
 def display_evaluation(y_test, y_pred):
     st.write("**Classification Report:**")
     st.text(classification_report(y_test, y_pred))
@@ -42,7 +42,6 @@ def display_evaluation(y_test, y_pred):
 
     st.write("**Confusion Matrix:**")
     st.write(df_cm)
-
 
 def display_wordclouds(data):
     st.write("**Word Cloud untuk Semua Data:**")
