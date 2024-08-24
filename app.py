@@ -101,42 +101,50 @@ def main():
     X_features, y_labels, vectorizer = preprocess_data(data)
 
     if menu == "Deteksi Berita":
-        st.markdown("**Masukkan Judul Prediksi**")
-        input_text = st.text_area("", height=150)
+        st.markdown("**Masukkan Kalimat untuk Prediksi (pisahkan dengan baris baru)**")
+        input_texts = st.text_area("", height=300)
 
         detect_button = st.button("Deteksi")
 
-        if detect_button and input_text:
-            X_train, X_test, y_train, y_test = train_test_split(X_features, y_labels, test_size=0.2, random_state=42)
+        if detect_button and input_texts:
+            sentences = input_texts.split('\n')
+            X_test_batch = vectorizer.transform(sentences)
+            X_test_dense_batch = csr_matrix.toarray(X_test_batch)
+
+            # Load the model and make predictions
+            X_train, _, y_train, _ = train_test_split(X_features, y_labels, test_size=0.2, random_state=42)
             model = train_model(X_train, y_train)
 
-            input_text_tfidf = vectorizer.transform([input_text])
-            input_text_dense = csr_matrix.toarray(input_text_tfidf)
+            predictions = model.predict(X_test_dense_batch)
+            prediction_proba = model.predict_proba(X_test_dense_batch)
 
-            # Get prediction and probabilities
-            prediction = model.predict(input_text_dense)
-            prediction_proba = model.predict_proba(input_text_dense)
+            # Count predictions
+            num_fakta = np.sum(predictions == 1)
+            num_hoax = np.sum(predictions == 0)
+            total = len(sentences)
             
-            # Extract probabilities for both classes
-            proba_fakta = prediction_proba[0][1] * 100  # Probability of class 1
-            proba_hoax = prediction_proba[0][0] * 100   # Probability of class 0
+            # Compute percentages
+            proba_fakta = np.mean(prediction_proba[:, 1]) * 100
+            proba_hoax = np.mean(prediction_proba[:, 0]) * 100
 
-            # Determine sentiment
-            if prediction[0] == 1:
-                sentiment = "Fakta"
-                color = "green"
-            else:
-                sentiment = "Hoax"
-                color = "red"
+            pro_fakta_percentage = (num_fakta / total) * 100
+            pro_hoax_percentage = (num_hoax / total) * 100
 
             st.markdown(f"""
-    <div style="text-align: center; background-color: {color}; color: white; padding: 10px;">
-        <strong>{sentiment}</strong><br>
-        Probabilitas Fakta: {proba_fakta:.2f}%<br>
-        Probabilitas Hoax: {proba_hoax:.2f}%
+    <div style="text-align: center; background-color: green; color: white; padding: 10px;">
+        <strong>Fakta</strong><br>
+        Jumlah: {num_fakta}<br>
+        Persentase: {pro_fakta_percentage:.2f}%<br>
+        Probabilitas Rata-rata: {proba_fakta:.2f}%
+    </div>
+    <div style="text-align: center; background-color: red; color: white; padding: 10px;">
+        <strong>Hoax</strong><br>
+        Jumlah: {num_hoax}<br>
+        Persentase: {pro_hoax_percentage:.2f}%<br>
+        Probabilitas Rata-rata: {proba_hoax:.2f}%
     </div>
     """, unsafe_allow_html=True)
-            
+
     elif menu == "Evaluasi Model":
         X_train, X_test, y_train, y_test = train_test_split(X_features, y_labels, test_size=0.2, random_state=42)
         model = train_model(X_train, y_train)
