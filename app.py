@@ -116,14 +116,20 @@ def main():
             # Get prediction and probability
             prediction = model.predict(input_text_dense)
             prediction_proba = model.predict_proba(input_text_dense)
-            sentiment = "Fakta" if prediction[0] == 1 else "Hoax"
-            sentiment_proba = prediction_proba[0][1] if prediction[0] == 1 else prediction_proba[0][0]
+            
+            # Determine sentiment and its probability
+            if prediction[0] == 1:
+                sentiment = "Fakta"
+                sentiment_proba = prediction_proba[0][1] * 100
+            else:
+                sentiment = "Hoax"
+                sentiment_proba = prediction_proba[0][0] * 100
 
             color = "green" if sentiment == "Fakta" else "red"
             st.markdown(f"""
     <div style="text-align: center; background-color: {color}; color: white; padding: 10px;">
         <strong>{sentiment}</strong><br>
-        Probabilitas: {sentiment_proba * 100:.2f}%
+        Probabilitas: {sentiment_proba:.2f}%
     </div>
     """, unsafe_allow_html=True)
             
