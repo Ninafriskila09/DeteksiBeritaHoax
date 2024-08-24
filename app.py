@@ -7,6 +7,8 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import classification_report, confusion_matrix
 from wordcloud import WordCloud
 from scipy.sparse import csr_matrix
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 # Memuat model dan vectorizer yang sudah disimpan
 vectorizer = joblib.load('vectorizer.pkl')
@@ -20,11 +22,8 @@ def load_data():
 def preprocess_data(data):
     X_raw = data["clean_text"]
     y_raw = data["Label"]
-
-    vectorizer = TfidfVectorizer(ngram_range=(1, 2))
-    X_TFIDF = vectorizer.fit_transform(X_raw)
-
-    return X_TFIDF, y_raw, vectorizer
+    X_TFIDF = vectorizer.transform(X_raw)
+    return X_TFIDF, y_raw
 
 def train_model(X_train, y_train):
     NB = GaussianNB()
@@ -41,7 +40,18 @@ def display_evaluation(y_test, y_pred):
     df_cm = pd.DataFrame(confm, index=columns, columns=columns)
 
     st.write("**Confusion Matrix:**")
-    st.write(df_cm)
+    
+    # Plotting Confusion Matrix as Heatmap
+    plt.figure(figsize=(8, 6))
+    ax = sns.heatmap(df_cm, cmap='Greens', annot=True, fmt=".0f", 
+                     xticklabels=columns, yticklabels=columns)
+    ax.set_title('Confusion Matrix')
+    ax.set_xlabel('Predicted Sentiment')
+    ax.set_ylabel('True Sentiment')
+
+    # Menampilkan plot di Streamlit
+    st.pyplot(plt)
+    plt.close()  # Tutup plt untuk menghindari plot yang tumpang tindih di masa depan
 
 def display_wordclouds(data):
     st.write("**Word Cloud untuk Semua Data:**")
@@ -82,7 +92,7 @@ def main():
 
     # Load data dan preprocess
     data = load_data()
-    X_features, y_labels, vectorizer = preprocess_data(data)
+    X_features, y_labels = preprocess_data(data)
 
     if menu == "Deteksi Berita":
         st.markdown("**Masukkan Judul Prediksi**")
@@ -99,9 +109,9 @@ def main():
             input_text_tfidf = vectorizer.transform([input_text])
             input_text_dense = csr_matrix.toarray(input_text_tfidf)
 
-            # Prediksi menggunakan model yang telah dimuat
+            # Prediksi menggunakan model yang telah dilatih
             prediction = model.predict(input_text_dense)
-            sentiment = "Fakta" if prediction[0] == 0 else "Hoax"
+            sentiment = "Fakta" if prediction[0] == 1 else "Hoax"  # 1 untuk Fakta, 0 untuk Hoax
 
             # Menampilkan hasil
             color = "green" if sentiment == "Fakta" else "red"
