@@ -33,15 +33,22 @@ def train_model(X_train, y_train):
     return NB
 
 def display_evaluation(y_test, y_pred):
+    # Menampilkan laporan klasifikasi
     st.write("**Classification Report:**")
     st.text(classification_report(y_test, y_pred))
 
-    columns = sorted(y_test.unique())
-    confm = confusion_matrix(y_test, y_pred, labels=columns)
-    df_cm = pd.DataFrame(confm, index=columns, columns=columns)
+    # Mengambil label unik dari data uji dan prediksi
+    labels = sorted(set(y_test) | set(y_pred))  # Menggabungkan label dari y_test dan y_pred
+
+    # Menghitung confusion matrix
+    confm = confusion_matrix(y_test, y_pred, labels=labels)
+    
+    # Membuat DataFrame dari confusion matrix dengan label yang konsisten
+    df_cm = pd.DataFrame(confm, index=labels, columns=labels)
 
     st.write("**Confusion Matrix:**")
-    st.write(df_cm)
+    st.dataframe(df_cm)  # Menggunakan st.dataframe untuk tampilan tabel yang interaktif
+
 
 def display_wordclouds(data):
     st.write("**Word Cloud untuk Semua Data:**")
