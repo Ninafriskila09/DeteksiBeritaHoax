@@ -112,7 +112,14 @@ def main():
                 </div>
                 """, unsafe_allow_html=True)
             else:
-                st.error("Model tidak memiliki metode predict_proba.")
+                # Jika model tidak memiliki predict_proba, gunakan predict saja
+                prediction = model.predict(input_text_tfidf)
+                sentiment = "Fakta" if prediction[0] == 1 else "Hoax"
+                st.markdown(f"""
+                <div style="text-align: center; background-color: {color}; color: white; padding: 10px;">
+                    <strong>{sentiment}</strong><br>
+                </div>
+                """, unsafe_allow_html=True)
 
     elif menu == "Evaluasi Model":
         # Memisahkan data untuk pelatihan dan pengujian
