@@ -25,50 +25,6 @@ def preprocess_data(data):
     X_TFIDF = vectorizer.fit_transform(X_raw)
 
     return X_TFIDF, y_raw, vectorizer
-# Tokenisasi dan ekstraksi fitur
-vectorizer = TfidfVectorizer()
-X = vectorizer.fit_transform(df['text'])
-y = df['label']
-
-# Split data
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
-
-# Train model
-model = MultinomialNB()
-model.fit(X_train, y_train)
-
-# Prediksi
-y_pred = model.predict(X_test)
-print(classification_report(y_test, y_pred))
-
-# Untuk analisis berita baru
-def classify_news(news):
-    news_transformed = vectorizer.transform([news])
-    prediction = model.predict(news_transformed)
-    return prediction
-
-# Contoh berita untuk analisis
-news_article = "Scientists find new evidence about climate change"
-prediction = classify_news(news_article)
-print(f"Prediction for news: {'Hoax' if prediction[1] == 0 else 'Fact'}")
-
-# Menghitung persentase kata
-def calculate_word_percentage(news, model, vectorizer):
-    words = news.split()
-    word_vectors = vectorizer.transform(words)
-    predictions = model.predict(word_vectors)
-    num_words = len(words)
-    num_hoax_words = np.sum(predictions)
-    num_fact_words = num_words - num_hoax_words
-    hoax_percentage = (num_hoax_words / num_words) * 100
-    fact_percentage = (num_fact_words / num_words) * 100
-    return hoax_percentage, fact_percentage
-
-# Analisis berita
-hoax_percentage, fact_percentage = calculate_word_percentage(news_article, model, vectorizer)
-print(f"Hoax words percentage: {hoax_percentage:.2f}%")
-print(f"Fact words percentage: {fact_percentage:.2f}%")
-
 
 def train_model(X_train, y_train):
     NB = GaussianNB()
