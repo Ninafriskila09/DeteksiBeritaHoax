@@ -33,7 +33,6 @@ def train_model(X_train, y_train):
     return NB
 
 def display_evaluation(y_test, y_pred):
-    df_cm = pd.DataFrame(confm, index=columns, columns=columns)
     st.write("Classification Report:")
     st.text(classification_report(y_test, y_pred))
 
