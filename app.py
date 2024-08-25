@@ -1,12 +1,11 @@
 import streamlit as st
 import pandas as pd
 import joblib
+import numpy as np
 from sklearn.model_selection import train_test_split
-import matplotlib.pyplot as plt
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.naive_bayes import GaussianNB
-from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
+from sklearn.pipeline import make_pipeline
+from sklearn.naive_bayes import MultinomialNB
 from sklearn.metrics import classification_report, confusion_matrix
 from wordcloud import WordCloud
 from scipy.sparse import csr_matrix
@@ -35,36 +34,48 @@ def train_model(X_train, y_train):
     NB.fit(X_train_dense, y_train)
     return NB
 
-data = load_iris()
-X = data.data
-y = data.target
+vectorizer = TfidfVectorizer()
+X = vectorizer.fit_transform(df['text'])
+y = df['label']
 
 # Split data
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
 
 # Train model
-model = RandomForestClassifier()
+model = MultinomialNB()
 model.fit(X_train, y_train)
 
 # Prediksi
 y_pred = model.predict(X_test)
+print(classification_report(y_test, y_pred))
 
-# Menghitung classification report dan confusion matrix
-report_dict = classification_report(y_test, y_pred, target_names=data.target_names, output_dict=True)
-cm = confusion_matrix(y_test, y_pred)
+# Untuk analisis berita baru
+def classify_news(news):
+    news_transformed = vectorizer.transform([news])
+    prediction = model.predict(news_transformed)
+    return prediction
 
-# Menampilkan classification report dengan format rapi
-report_df = pd.DataFrame(report_dict).transpose()
-print("Classification Report:")
-print(report_df)
+# Contoh berita untuk analisis
+news_article = "Scientists find new evidence about climate change"
+prediction = classify_news(news_article)
+print(f"Prediction for news: {'Hoax' if prediction[0] == 1 else 'Fact'}")
 
-# Visualisasi confusion matrix
-plt.figure(figsize=(10, 7))
-sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=data.target_names, yticklabels=data.target_names)
-plt.xlabel('Predicted')
-plt.ylabel('Actual')
-plt.title('Confusion Matrix')
-plt.show()
+# Menghitung persentase kata
+def calculate_word_percentage(news, model, vectorizer):
+    words = news.split()
+    word_vectors = vectorizer.transform(words)
+    predictions = model.predict(word_vectors)
+    num_words = len(words)
+    num_hoax_words = np.sum(predictions)
+    num_fact_words = num_words - num_hoax_words
+    hoax_percentage = (num_hoax_words / num_words) * 100
+    fact_percentage = (num_fact_words / num_words) * 100
+    return hoax_percentage, fact_percentage
+
+# Analisis berita
+hoax_percentage, fact_percentage = calculate_word_percentage(news_article, model, vectorizer)
+print(f"Hoax words percentage: {hoax_percentage:.2f}%")
+print(f"Fact words percentage: {fact_percentage:.2f}%")
 
 def display_wordclouds(data):
     st.write("**Word Cloud untuk Semua Data:**")
