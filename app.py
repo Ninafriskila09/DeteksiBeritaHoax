@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import joblib
+from PIL import Image
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.naive_bayes import GaussianNB
@@ -31,6 +32,7 @@ def train_model(X_train, y_train):
     X_train_dense = csr_matrix.toarray(X_train)
     NB.fit(X_train_dense, y_train)
     return NB
+
 
 def display_evaluation(y_test, y_pred):
     st.write("Classification Report:")
