@@ -2,8 +2,12 @@ import streamlit as st
 import pandas as pd
 import joblib
 from sklearn.model_selection import train_test_split
+import matplotlib.pyplot as plt
+import seaborn as sns
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.naive_bayes import GaussianNB
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report, confusion_matrix
 from wordcloud import WordCloud
 from scipy.sparse import csr_matrix
@@ -32,16 +36,36 @@ def train_model(X_train, y_train):
     NB.fit(X_train_dense, y_train)
     return NB
 
-def display_evaluation(y_test, y_pred):
-    st.write("**Classification Report:**")
-    st.text(classification_report(y_test, y_pred))
+data = load_iris()
+X = data.data
+y = data.target
 
-    columns = sorted(y_test.unique())
-    confm = confusion_matrix(y_test, y_pred, labels=columns)
-    df_cm = pd.DataFrame(confm, index=columns, columns=columns)
+# Split data
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
 
-    st.write("**Confusion Matrix:**")
-    st.write(df_cm)
+# Train model
+model = RandomForestClassifier()
+model.fit(X_train, y_train)
+
+# Prediksi
+y_pred = model.predict(X_test)
+
+# Menghitung classification report dan confusion matrix
+report_dict = classification_report(y_test, y_pred, target_names=data.target_names, output_dict=True)
+cm = confusion_matrix(y_test, y_pred)
+
+# Menampilkan classification report dengan format rapi
+report_df = pd.DataFrame(report_dict).transpose()
+print("Classification Report:")
+print(report_df)
+
+# Visualisasi confusion matrix
+plt.figure(figsize=(10, 7))
+sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=data.target_names, yticklabels=data.target_names)
+plt.xlabel('Predicted')
+plt.ylabel('Actual')
+plt.title('Confusion Matrix')
+plt.show()
 
 def display_wordclouds(data):
     st.write("**Word Cloud untuk Semua Data:**")
