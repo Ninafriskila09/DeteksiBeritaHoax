@@ -42,13 +42,17 @@ def display_evaluation(y_test, y_pred):
     st.write("**Classification Report:**")
     st.text_area("Classification Report:", classification_report(y_test, y_pred), height=300)
     
-    # Display the confusion matrix
-    st.write("**Confusion Matrix:**")
+    # Display the confusion matrix as a DataFrame
+    st.write("**Confusion Matrix (DataFrame):**")
     st.dataframe(df_cm)
     
-    # Plotting the confusion matrix
+    # Plotting the confusion matrix as a heatmap
+    st.write("**Confusion Matrix (Heatmap):**")
     fig, ax = plt.subplots(figsize=(10, 7))
     sns.heatmap(df_cm, annot=True, fmt='d', cmap='Blues', ax=ax)
+    ax.set_xlabel('Predicted Labels')
+    ax.set_ylabel('True Labels')
+    ax.set_title('Confusion Matrix Heatmap')
     st.pyplot(fig)
 
 def display_wordclouds(data):
