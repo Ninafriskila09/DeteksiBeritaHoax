@@ -1,9 +1,11 @@
 import streamlit as st
 import pandas as pd
 import joblib
+import seaborn as sns
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.naive_bayes import GaussianNB
+import matplotlib.pyplot as plt
 from sklearn.metrics import classification_report, confusion_matrix
 from wordcloud import WordCloud
 from scipy.sparse import csr_matrix
@@ -54,7 +56,7 @@ def display_evaluation(y_test, y_pred):
     ax.set_ylabel('True Labels')
     ax.set_title('Confusion Matrix Heatmap')
     st.pyplot(fig)
-
+    
 def display_wordclouds(data):
     st.write("**Word Cloud untuk Semua Data:**")
     all_text = ' '.join(data['clean_text'])
