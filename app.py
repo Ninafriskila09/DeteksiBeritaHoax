@@ -32,18 +32,24 @@ def train_model(X_train, y_train):
     NB.fit(X_train_dense, y_train)
     return NB
 
-# Display the classification report
-st.write("**Classification Report:**")
-st.text(classification_report(y_test, y_pred))
-
-# Create and display the confusion matrix
-columns = sorted(y_test.unique())
-confm = confusion_matrix(y_test, y_pred, labels=columns)
-df_cm = pd.DataFrame(confm, index=columns, columns=columns)
-
-# Display the confusion matrix as a dataframe
-st.write("**Confusion Matrix:**")
-st.dataframe(df_cm)
+def display_evaluation(y_test, y_pred):
+    # Calculate confusion matrix and its DataFrame
+    columns = sorted(y_test.unique())
+    confm = confusion_matrix(y_test, y_pred, labels=columns)
+    df_cm = pd.DataFrame(confm, index=columns, columns=columns)
+    
+    # Display the classification report
+    st.write("**Classification Report:**")
+    st.text_area("Classification Report:", classification_report(y_test, y_pred), height=300)
+    
+    # Display the confusion matrix
+    st.write("**Confusion Matrix:**")
+    st.dataframe(df_cm)
+    
+    # Plotting the confusion matrix
+    fig, ax = plt.subplots(figsize=(10, 7))
+    sns.heatmap(df_cm, annot=True, fmt='d', cmap='Blues', ax=ax)
+    st.pyplot(fig)
 
 def display_wordclouds(data):
     st.write("**Word Cloud untuk Semua Data:**")
