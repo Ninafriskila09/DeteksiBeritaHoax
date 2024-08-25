@@ -1,11 +1,9 @@
 import streamlit as st
 import pandas as pd
 import joblib
-import seaborn as sns
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.naive_bayes import GaussianNB
-import matplotlib.pyplot as plt
 from sklearn.metrics import classification_report, confusion_matrix
 from wordcloud import WordCloud
 from scipy.sparse import csr_matrix
