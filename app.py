@@ -94,9 +94,8 @@ def main():
 
         if detect_button and input_text:
             input_text_tfidf = vectorizer.transform([input_text])
-            input_text_dense = csr_matrix.toarray(input_text_tfidf)
-            prediction = model.predict(input_text_dense)
-            sentiment = "Fakta" if prediction[0] == 0 else "Hoax"
+            prediction = model.predict(input_text_tfidf)
+            sentiment = "Fakta" if prediction[0] == 1 else "Hoax"
             color = "green" if sentiment == "Fakta" else "red"
             st.markdown(f"""
     <div style="text-align: center; background-color: {color}; color: white; padding: 10px;">
@@ -116,4 +115,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
