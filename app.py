@@ -42,6 +42,7 @@ st.text(classification_report(y_test, y_pred))
 columns = sorted(y_test.unique())
 confm = confusion_matrix(y_test, y_pred, labels=columns)
 df_cm = pd.DataFrame(confm, index=columns, columns=columns)
+
     st.write("Confusion Matrix:")
     st.write(df_cm)
 
