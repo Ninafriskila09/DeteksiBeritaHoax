@@ -4,11 +4,8 @@ import joblib
 import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.pipeline import make_pipeline
-from sklearn.naive_bayes import MultinomialNB
 from sklearn.metrics import classification_report, confusion_matrix
 from wordcloud import WordCloud
-from scipy.sparse import csr_matrix
 
 # Memuat model dan vectorizer yang sudah disimpan
 vectorizer = joblib.load('vectorizer.pkl')
@@ -104,9 +101,8 @@ def main():
     """, unsafe_allow_html=True)
             
     elif menu == "Evaluasi Model":
+        # Menggunakan model yang dimuat dari file
         X_train, X_test, y_train, y_test = train_test_split(X_features, y_labels, test_size=0.2, random_state=42)
-        model = MultinomialNB()
-        model.fit(X_train, y_train)
         y_pred = model.predict(X_test)
         display_evaluation(y_test, y_pred)
 
