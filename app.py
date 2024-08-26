@@ -106,16 +106,25 @@ def main():
 
             # Prediksi menggunakan model yang telah dimuat
             prediction = model.predict(input_text_dense)
-            sentiment = "Fakta" if prediction[0] == 0 else "Hoax"
+
+            # Menghitung probabilitas untuk setiap kelas
+            probabilities = model.predict_proba(input_text_dense)
+            prob_fakta = probabilities[0][1] * 100
+            prob_hoax = probabilities[0][0] * 100
 
             # Menampilkan hasil
+            sentiment = "Fakta" if prediction[0] == 1 else "Hoax"
             color = "green" if sentiment == "Fakta" else "red"
+
             st.markdown(f"""
     <div style="text-align: center; background-color: {color}; color: white; padding: 10px;">
         <strong>{sentiment}</strong>
     </div>
     """, unsafe_allow_html=True)
-            
+
+            st.write(f"**Probabilitas Fakta:** {prob_fakta:.2f}%")
+            st.write(f"**Probabilitas Hoax:** {prob_hoax:.2f}%")
+
     elif menu == "Evaluasi Model":
         # Memisahkan data untuk pelatihan dan pengujian
         X_train, X_test, y_train, y_test = train_test_split(X_features, y_labels, test_size=0.2, random_state=42)
@@ -131,3 +140,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
