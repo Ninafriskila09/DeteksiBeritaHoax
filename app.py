@@ -1,10 +1,9 @@
 import streamlit as st
 import pandas as pd
 import joblib
-from PIL import Image
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.naive_bayes import GaussianNB
+from sklearn.naive_bayes import MultinomialNB
 from sklearn.metrics import classification_report, confusion_matrix
 from wordcloud import WordCloud
 from scipy.sparse import csr_matrix
@@ -28,10 +27,9 @@ def preprocess_data(data):
     return X_TFIDF, y_raw, vectorizer
 
 def train_model(X_train, y_train):
-    NB = GaussianNB()
-    X_train_dense = csr_matrix.toarray(X_train)
-    NB.fit(X_train_dense, y_train)
-    return NB
+    model = MultinomialNB()  # Mengganti GaussianNB dengan MultinomialNB
+    model.fit(X_train, y_train)
+    return model
 
 def display_evaluation(y_test, y_pred):
     st.write("**Classification Report:**")
@@ -43,7 +41,7 @@ def display_evaluation(y_test, y_pred):
 
     st.write("**Confusion Matrix:**")
     st.write(df_cm)
-    
+
 def display_wordclouds(data):
     st.write("**Word Cloud untuk Semua Data:**")
     all_text = ' '.join(data['clean_text'])
@@ -67,7 +65,6 @@ def display_wordclouds(data):
     st.image(wordcloud_hoax.to_array(), use_column_width=True)
 
 def main():
-    # Mengubah background menjadi putih dengan CSS
     st.markdown(
         """
         <style>
@@ -82,10 +79,8 @@ def main():
     st.markdown("<h2 style='text-align: center;'>Sistem Deteksi Berita Hoax Naive Bayes</h2>",
                 unsafe_allow_html=True)
 
-    # Sidebar menu
     menu = st.sidebar.radio("Pilih Menu", ["Deteksi Berita", "Evaluasi Model", "Visualisasi Word Cloud"])
 
-    # Load data dan preprocess
     data = load_data()
     X_features, y_labels, vectorizer = preprocess_data(data)
 
@@ -96,24 +91,18 @@ def main():
         detect_button = st.button("Deteksi")
 
         if detect_button and input_text:
-            # Memisahkan data untuk pelatihan dan pengujian
             X_train, X_test, y_train, y_test = train_test_split(X_features, y_labels, test_size=0.2, random_state=42)
             model = train_model(X_train, y_train)
 
-            # Transformasi teks dengan vectorizer yang digunakan untuk melatih model
             input_text_tfidf = vectorizer.transform([input_text])
-            input_text_dense = csr_matrix.toarray(input_text_tfidf)
 
-            # Prediksi menggunakan model yang telah dimuat
-            prediction = model.predict(input_text_dense)
+            # Prediksi menggunakan model
+            prediction = model.predict(input_text_tfidf)
+            probabilities = model.predict_proba(input_text_tfidf)
+            prob_fakta = probabilities[0][1] * 100
+            prob_hoax = probabilities[0][0] * 100
 
-            # Menghitung probabilitas untuk setiap kelas
-            probabilities = model.predict_proba(input_text_dense)
-            prob_fakta = probabilities[0][0] * 100
-            prob_hoax = probabilities[0][1] * 100
-
-            # Menampilkan hasil
-            sentiment = "Fakta" if prediction[1] == 0 else "Hoax"
+            sentiment = "Fakta" if prediction[0] == 1 else "Hoax"
             color = "green" if sentiment == "Fakta" else "red"
 
             st.markdown(f"""
@@ -126,18 +115,14 @@ def main():
             st.write(f"**Probabilitas Hoax:** {prob_hoax:.2f}%")
 
     elif menu == "Evaluasi Model":
-        # Memisahkan data untuk pelatihan dan pengujian
         X_train, X_test, y_train, y_test = train_test_split(X_features, y_labels, test_size=0.2, random_state=42)
         model = train_model(X_train, y_train)
 
-        # Evaluasi model
-        y_pred = model.predict(csr_matrix.toarray(X_test))
+        y_pred = model.predict(X_test)
         display_evaluation(y_test, y_pred)
 
     elif menu == "Visualisasi Word Cloud":
-        # Tampilkan Word Cloud di bawah hasil
         display_wordclouds(data)
 
 if __name__ == '__main__':
     main()
-
