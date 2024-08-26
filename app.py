@@ -84,7 +84,7 @@ def main():
     data = load_data()
     X_features, y_labels, vectorizer = preprocess_data(data)
 
-    elif menu == "Deteksi Berita":
+    if menu == "Deteksi Berita":
     st.markdown("**Masukkan Judul untuk Prediksi**")
     input_text = st.text_area("", height=150)
 
