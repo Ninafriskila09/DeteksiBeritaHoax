@@ -84,35 +84,42 @@ def main():
     data = load_data()
     X_features, y_labels, vectorizer = preprocess_data(data)
 
-    if menu == "Deteksi Berita":
-        st.markdown("**Masukkan Judul Prediksi**")
-        input_text = st.text_area("", height=150)
+    elif menu == "Deteksi Berita":
+    st.markdown("**Masukkan Judul untuk Prediksi**")
+    input_text = st.text_area("", height=150)
 
-        detect_button = st.button("Deteksi")
+    detect_button = st.button("Deteksi")
 
-        if detect_button and input_text:
-            X_train, X_test, y_train, y_test = train_test_split(X_features, y_labels, test_size=0.2, random_state=42)
-            model = train_model(X_train, y_train)
+    if detect_button and input_text:
+        # Memisahkan data untuk pelatihan dan pengujian
+        X_train, X_test, y_train, y_test = train_test_split(X_features, y_labels, test_size=0.2, random_state=42)
+        model = train_model(X_train, y_train)
 
-            input_text_tfidf = vectorizer.transform([input_text])
+        # Transformasi teks dengan vectorizer yang digunakan untuk melatih model
+        input_text_tfidf = vectorizer.transform([input_text])
+        input_text_dense = csr_matrix.toarray(input_text_tfidf)
 
-            # Prediksi menggunakan model
-            prediction = model.predict(input_text_tfidf)
-            probabilities = model.predict_proba(input_text_tfidf)
-            prob_fakta = probabilities[0][1] * 100
-            prob_hoax = probabilities[0][0] * 100
+        # Prediksi menggunakan model yang telah dimuat
+        prediction = model.predict(input_text_dense)
 
-            sentiment = "Fakta" if prediction[0] == 1 else "Hoax"
-            color = "green" if sentiment == "Fakta" else "red"
+        # Menghitung probabilitas untuk setiap kelas
+        probabilities = model.predict_proba(input_text_dense)
+        prob_fakta = probabilities[0][1] * 100
+        prob_hoax = probabilities[0][0] * 100
 
-            st.markdown(f"""
-    <div style="text-align: center; background-color: {color}; color: white; padding: 10px;">
-        <strong>{sentiment}</strong>
-    </div>
-    """, unsafe_allow_html=True)
+        # Menampilkan hasil
+        sentiment = "Fakta" if prediction[0] == 1 else "Hoax"
+        color = "green" if sentiment == "Fakta" else "red"
 
-            st.write(f"**Probabilitas Fakta:** {prob_fakta:.2f}%")
-            st.write(f"**Probabilitas Hoax:** {prob_hoax:.2f}%")
+        st.markdown(f"""
+<div style="text-align: center; background-color: {color}; color: white; padding: 10px;">
+    <strong>{sentiment}</strong>
+</div>
+""", unsafe_allow_html=True)
+
+        st.write(f"**Probabilitas Fakta:** {prob_fakta:.2f}%")
+        st.write(f"**Probabilitas Hoax:** {prob_hoax:.2f}%")
+
 
     elif menu == "Evaluasi Model":
         X_train, X_test, y_train, y_test = train_test_split(X_features, y_labels, test_size=0.2, random_state=42)
