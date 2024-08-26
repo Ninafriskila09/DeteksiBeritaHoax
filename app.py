@@ -113,7 +113,7 @@ def main():
             prob_hoax = probabilities[0][0] * 100
 
             # Menampilkan hasil
-            sentiment = "Fakta" if prediction[0] == 1 else "Hoax"
+            sentiment = "Fakta" if prediction[1] == 0 else "Hoax"
             color = "green" if sentiment == "Fakta" else "red"
 
             st.markdown(f"""
