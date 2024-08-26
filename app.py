@@ -137,6 +137,8 @@ def main():
     elif menu == "Visualisasi Word Cloud":
         # Tampilkan Word Cloud di bawah hasil
         display_wordclouds(data)
+        
+     st.image('path_to_your_logo.png', width=200)
 
 if __name__ == '__main__':
     main()
