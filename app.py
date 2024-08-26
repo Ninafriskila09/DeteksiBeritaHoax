@@ -25,7 +25,6 @@ def preprocess_data(data):
     X_TFIDF = vectorizer.fit_transform(X_raw)
 
     return X_TFIDF, y_raw, vectorizer
-
 def train_model(X_train, y_train):
     NB = GaussianNB()
     X_train_dense = csr_matrix.toarray(X_train)
@@ -50,8 +49,7 @@ def display_wordclouds(data):
     st.image(wordcloud_all.to_array(), use_column_width=True)
 
     st.markdown("<br>", unsafe_allow_html=True)
-
-    st.write("*Word Cloud untuk Fakta:*")
+ st.write("*Word Cloud untuk Fakta:*")
     fakta = data[data['Label'] == 0]  # Fakta adalah label 0
     all_text_fakta = ' '.join(fakta['clean_text'])
     wordcloud_fakta = WordCloud(width=800, height=400, background_color='white').generate(all_text_fakta)
@@ -77,8 +75,7 @@ def main():
         """,
         unsafe_allow_html=True
     )
-
-    st.markdown("<h2 style='text-align: center;'>Sistem Deteksi Berita Hoax Naive Bayes</h2>",
+ st.markdown("<h2 style='text-align: center;'>Sistem Deteksi Berita Hoax Naive Bayes</h2>",
                 unsafe_allow_html=True)
 
     # Sidebar menu
@@ -103,7 +100,7 @@ def main():
             input_text_tfidf = vectorizer.transform([input_text])
             input_text_dense = csr_matrix.toarray(input_text_tfidf)
 
-            # Prediksi menggunakan model yang telah dimuat
+# Prediksi menggunakan model yang telah dimuat
             prediction = model.predict(input_text_dense)
 
             # Menghitung probabilitas untuk setiap kelas
@@ -129,8 +126,7 @@ def main():
         # Memisahkan data untuk pelatihan dan pengujian
         X_train, X_test, y_train, y_test = train_test_split(X_features, y_labels, test_size=0.2, random_state=42)
         model = train_model(X_train, y_train)
-
-        # Evaluasi model
+ # Evaluasi model
         y_pred = model.predict(csr_matrix.toarray(X_test))
         display_evaluation(y_test, y_pred)
 
@@ -139,4 +135,4 @@ def main():
         display_wordclouds(data)
 
 if _name_ == '_main_':
-    main()
+    main()
