@@ -138,7 +138,7 @@ def main():
         # Tampilkan Word Cloud di bawah hasil
         display_wordclouds(data)
         
-     st.image('path_to_your_logo.png', width=200)
+     st.image('Langkah Ampuh Mendeteksi Berita Hoax (1) (1).jpg', width=200)
 
 if __name__ == '__main__':
     main()
