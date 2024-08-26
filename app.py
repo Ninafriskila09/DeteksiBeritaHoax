@@ -142,3 +142,11 @@ def main():
         X_train, X_test, y_train, y_test = train_test_split(X_features, y_labels, test_size=0.2, random_state=42)
         model = train_model(X_train, y_train)
         y_pred
+
+       
+elif menu == "Visualisasi Word Cloud":
+        # Tampilkan Word Cloud di bawah hasil
+        display_wordclouds(data)
+
+if _name_ == '_main_':
+    main()
