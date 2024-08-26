@@ -109,8 +109,8 @@ def main():
 
             # Menghitung probabilitas untuk setiap kelas
             probabilities = model.predict_proba(input_text_dense)
-            prob_fakta = probabilities[0][1] * 100
-            prob_hoax = probabilities[0][0] * 100
+            prob_fakta = probabilities[0][0] * 100
+            prob_hoax = probabilities[0][1] * 100
 
             # Menampilkan hasil
             sentiment = "Fakta" if prediction[1] == 0 else "Hoax"
