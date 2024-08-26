@@ -42,7 +42,7 @@ def display_evaluation(y_test, y_pred):
 
     st.write("**Confusion Matrix:**")
     st.write(df_cm)
-    
+
 def display_wordclouds(data):
     st.write("**Word Cloud untuk Semua Data:**")
     all_text = ' '.join(data['clean_text'])
@@ -78,6 +78,7 @@ def main():
         unsafe_allow_html=True
     )
 
+    # Tampilkan gambar header dengan HTML dan CSS
     st.markdown(
         """
         <div style="text-align: center;">
@@ -87,7 +88,7 @@ def main():
         unsafe_allow_html=True
     )
 
-   st.markdown("<h2 style='text-align: center;'>Sistem Deteksi Berita Hoax Naive Bayes</h2>",
+    st.markdown("<h2 style='text-align: center;'>Sistem Deteksi Berita Hoax Naive Bayes</h2>",
                 unsafe_allow_html=True)
 
     # Sidebar menu
@@ -125,10 +126,10 @@ def main():
             color = "green" if sentiment == "Fakta" else "red"
 
             st.markdown(f"""
-    <div style="text-align: center; background-color: {color}; color: white; padding: 10px;">
-        <strong>{sentiment}</strong>
-    </div>
-    """, unsafe_allow_html=True)
+            <div style="text-align: center; background-color: {color}; color: white; padding: 10px;">
+                <strong>{sentiment}</strong>
+            </div>
+            """, unsafe_allow_html=True)
 
             # Display probabilities
             st.write(f"**Probabilitas Fakta:** {prob_fakta:.2f}%")
