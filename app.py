@@ -82,7 +82,7 @@ def main():
     st.markdown(
         """
         <div style="text-align: center;">
-            <img src="images.jpg" alt="Header Image" style="width: 756px; height: 189px;"/>
+            <img src="Langkah Ampuh Mendeteksi Berita Hoax (1) (1).jpg" alt="Header Image" style="width: 756px; height: 189px;"/>
         </div>
         """,
         unsafe_allow_html=True
