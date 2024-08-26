@@ -78,10 +78,16 @@ def main():
         unsafe_allow_html=True
     )
 
-    # Tampilkan gambar dengan tinggi yang diinginkan
-    st.image('Langkah Ampuh Mendeteksi Berita Hoax (1) (1).jpg', height=150)  # Tinggi gambar dalam piksel
+    st.markdown(
+        """
+        <div style="text-align: center;">
+            <img src="Langkah Ampuh Mendeteksi Berita Hoax (1) (1).jpg" alt="Header Image" style="width: 756px; height: 189px;"/>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
-    st.markdown("<h2 style='text-align: center;'>Sistem Deteksi Berita Hoax Naive Bayes</h2>",
+   st.markdown("<h2 style='text-align: center;'>Sistem Deteksi Berita Hoax Naive Bayes</h2>",
                 unsafe_allow_html=True)
 
     # Sidebar menu
