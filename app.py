@@ -53,7 +53,7 @@ def display_wordclouds(data):
     st.markdown("<br>", unsafe_allow_html=True)
 
     st.write("**Word Cloud untuk Fakta:**")
-    fakta = data[data['Label'] == 1]
+    fakta = data[data['Label'] == 0]
     all_text_fakta = ' '.join(fakta['clean_text'])
     wordcloud_fakta = WordCloud(width=800, height=400, background_color='white').generate(all_text_fakta)
     st.image(wordcloud_fakta.to_array(), use_column_width=True)
@@ -61,7 +61,7 @@ def display_wordclouds(data):
     st.markdown("<br>", unsafe_allow_html=True)
 
     st.write("**Word Cloud untuk Hoax:**")
-    hoax = data[data['Label'] == 0]
+    hoax = data[data['Label'] == 1]
     all_text_hoax = ' '.join(hoax['clean_text'])
     wordcloud_hoax = WordCloud(width=800, height=400, background_color='white').generate(all_text_hoax)
     st.image(wordcloud_hoax.to_array(), use_column_width=True)
@@ -109,11 +109,11 @@ def main():
 
             # Menghitung probabilitas untuk setiap kelas
             probabilities = model.predict_proba(input_text_dense)
-            prob_fakta = probabilities[0][0] * 100
-            prob_hoax = probabilities[0][1] * 100
+            prob_fakta = probabilities[0][0] * 100  # Probabilitas "Fakta"
+            prob_hoax = probabilities[0][1] * 100   # Probabilitas "Hoax"
 
             # Menampilkan hasil
-            sentiment = "Fakta" if prediction[1] == 0 else "Hoax"
+            sentiment = "Fakta" if prediction[0] == 0 else "Hoax"
             color = "green" if sentiment == "Fakta" else "red"
 
             st.markdown(f"""
@@ -123,12 +123,8 @@ def main():
     """, unsafe_allow_html=True)
 
             # Display probabilities
-            if sentiment == "Fakta":
-                st.write(f"**Probabilitas Fakta:** {prob_fakta:.2f}%")
-                st.write(f"**Probabilitas Hoax:** {prob_hoax:.2f}%")
-            else:
-                st.write(f"**Probabilitas Fakta:** {prob_hoax:.2f}%")
-                st.write(f"**Probabilitas Hoax:** {prob_fakta:.2f}%")
+            st.write(f"**Probabilitas Fakta:** {prob_fakta:.2f}%")
+            st.write(f"**Probabilitas Hoax:** {prob_hoax:.2f}%")
 
     elif menu == "Evaluasi Model":
         # Memisahkan data untuk pelatihan dan pengujian
