@@ -42,7 +42,7 @@ def display_evaluation(y_test, y_pred):
 
     st.write("**Confusion Matrix:**")
     st.write(df_cm)
-
+    
 def display_wordclouds(data):
     st.write("**Word Cloud untuk Semua Data:**")
     all_text = ' '.join(data['clean_text'])
@@ -78,36 +78,20 @@ def main():
         unsafe_allow_html=True
     )
 
-    # Tampilkan gambar header dengan HTML dan CSS
-    st.markdown(
-        """
-        <div style="text-align: center;">
-            <img src="Langkah Ampuh Mendeteksi Berita Hoax (1) (1).jpg" alt="Header Image" style="width: 756px; height: 189px;"/>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+    # Tampilkan gambar dengan ukuran yang diinginkan
+    st.image('Langkah Ampuh Mendeteksi Berita Hoax (1) (1) (1).jpg')  # Lebar gambar dalam piksel
 
-    # Judul halaman
     st.markdown("<h2 style='text-align: center;'>Sistem Deteksi Berita Hoax Naive Bayes</h2>",
                 unsafe_allow_html=True)
 
     # Sidebar menu
-    menu = st.sidebar.radio("Pilih Menu", ["Home", "Deteksi Berita", "Evaluasi Model", "Visualisasi Word Cloud", "Informasi"])
+    menu = st.sidebar.radio("Pilih Menu", ["Deteksi Berita", "Evaluasi Model", "Visualisasi Word Cloud"])
 
     # Load data dan preprocess
     data = load_data()
     X_features, y_labels, vectorizer = preprocess_data(data)
 
-    if menu == "Home":
-        st.write("Selamat datang di aplikasi Deteksi Berita Hoax. Pilih menu dari sidebar untuk mulai menggunakan aplikasi.")
-        st.write("Aplikasi ini menggunakan model Naive Bayes untuk mendeteksi berita hoax. Anda dapat memilih salah satu dari menu berikut:")
-        st.write("- **Deteksi Berita**: Untuk memprediksi apakah berita yang dimasukkan adalah hoax atau fakta.")
-        st.write("- **Evaluasi Model**: Untuk melihat performa model dengan metrik evaluasi.")
-        st.write("- **Visualisasi Word Cloud**: Untuk melihat visualisasi word cloud dari data.")
-        st.write("- **Informasi**: Untuk informasi tambahan tentang aplikasi dan cara penggunaannya.")
-
-    elif menu == "Deteksi Berita":
+    if menu == "Deteksi Berita":
         st.markdown("**Masukkan Judul Prediksi**")
         input_text = st.text_area("", height=150)
 
@@ -135,10 +119,10 @@ def main():
             color = "green" if sentiment == "Fakta" else "red"
 
             st.markdown(f"""
-            <div style="text-align: center; background-color: {color}; color: white; padding: 10px;">
-                <strong>{sentiment}</strong>
-            </div>
-            """, unsafe_allow_html=True)
+    <div style="text-align: center; background-color: {color}; color: white; padding: 10px;">
+        <strong>{sentiment}</strong>
+    </div>
+    """, unsafe_allow_html=True)
 
             # Display probabilities
             st.write(f"**Probabilitas Fakta:** {prob_fakta:.2f}%")
@@ -157,15 +141,6 @@ def main():
         # Tampilkan Word Cloud di bawah hasil
         display_wordclouds(data)
 
-    elif menu == "Informasi":
-        st.write("**Informasi tentang Aplikasi**")
-        st.write("Aplikasi ini bertujuan untuk mendeteksi berita hoax dengan menggunakan model Naive Bayes.")
-        st.write("Berikut adalah beberapa informasi tambahan:")
-        st.write("- **Deteksi Berita**: Masukkan teks berita untuk mengetahui apakah berita tersebut termasuk hoax atau fakta.")
-        st.write("- **Evaluasi Model**: Menampilkan metrik evaluasi dari model, seperti classification report dan confusion matrix.")
-        st.write("- **Visualisasi Word Cloud**: Menampilkan visualisasi kata-kata yang sering muncul dalam data berita.")
-        st.write("- **Informasi**: Menyediakan informasi umum tentang aplikasi dan cara penggunaannya.")
-        st.write("Untuk pertanyaan atau bantuan lebih lanjut, silakan hubungi tim pengembang.")
-
 if __name__ == '__main__':
     main()
+
