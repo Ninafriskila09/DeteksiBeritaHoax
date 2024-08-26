@@ -49,7 +49,8 @@ def display_wordclouds(data):
     st.image(wordcloud_all.to_array(), use_column_width=True)
 
     st.markdown("<br>", unsafe_allow_html=True)
- st.write("*Word Cloud untuk Fakta:*")
+    
+    st.write("*Word Cloud untuk Fakta:*")
     fakta = data[data['Label'] == 0]  # Fakta adalah label 0
     all_text_fakta = ' '.join(fakta['clean_text'])
     wordcloud_fakta = WordCloud(width=800, height=400, background_color='white').generate(all_text_fakta)
