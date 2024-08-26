@@ -141,12 +141,11 @@ def main():
     elif menu == "Evaluasi Model":
         X_train, X_test, y_train, y_test = train_test_split(X_features, y_labels, test_size=0.2, random_state=42)
         model = train_model(X_train, y_train)
-        y_pred
+        y_pred = model.predict(csr_matrix.toarray(X_test))
+        display_evaluation(y_test, y_pred)
 
-       
-elif menu == "Visualisasi Word Cloud":
-        # Tampilkan Word Cloud di bawah hasil
+    elif menu == "Visualisasi Word Cloud":
         display_wordclouds(data)
 
-if _name_ == '_main_':
-    main()
+if __name__ == '__main__':
+    main()
