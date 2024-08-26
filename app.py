@@ -78,8 +78,8 @@ def main():
         unsafe_allow_html=True
     )
 
-    # Tampilkan gambar di atas judul
-    st.image('Langkah Ampuh Mendeteksi Berita Hoax (1) (1).jpg', use_column_width=True)
+    # Tampilkan gambar dengan ukuran yang diinginkan
+    st.image('Langkah Ampuh Mendeteksi Berita Hoax (1) (1).jpg', width=756)  # Lebar gambar dalam piksel
 
     st.markdown("<h2 style='text-align: center;'>Sistem Deteksi Berita Hoax Naive Bayes</h2>",
                 unsafe_allow_html=True)
@@ -143,3 +143,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
