@@ -7,6 +7,7 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import classification_report, confusion_matrix
 from wordcloud import WordCloud
 from scipy.sparse import csr_matrix
+import matplotlib.pyplot as plt
 
 # Memuat model dan vectorizer yang sudah disimpan
 vectorizer = joblib.load('vectorizer.pkl')
@@ -42,12 +43,15 @@ def display_evaluation(y_test, y_pred):
 
     st.write("**Confusion Matrix:**")
     st.write(df_cm)
-    
+
 def display_wordclouds(data):
     st.write("**Word Cloud untuk Semua Data:**")
     all_text = ' '.join(data['clean_text'])
     wordcloud_all = WordCloud(width=800, height=400, background_color='white').generate(all_text)
-    st.image(wordcloud_all.to_array(), use_column_width=True)
+    plt.figure(figsize=(10, 5))
+    plt.imshow(wordcloud_all, interpolation='bilinear')
+    plt.axis('off')
+    st.pyplot()
 
     st.markdown("<br>", unsafe_allow_html=True)
 
@@ -55,7 +59,10 @@ def display_wordclouds(data):
     fakta = data[data['Label'] == 0]  # Fakta adalah label 0
     all_text_fakta = ' '.join(fakta['clean_text'])
     wordcloud_fakta = WordCloud(width=800, height=400, background_color='white').generate(all_text_fakta)
-    st.image(wordcloud_fakta.to_array(), use_column_width=True)
+    plt.figure(figsize=(10, 5))
+    plt.imshow(wordcloud_fakta, interpolation='bilinear')
+    plt.axis('off')
+    st.pyplot()
 
     st.markdown("<br>", unsafe_allow_html=True)
 
@@ -63,7 +70,10 @@ def display_wordclouds(data):
     hoax = data[data['Label'] == 1]  # Hoax adalah label 1
     all_text_hoax = ' '.join(hoax['clean_text'])
     wordcloud_hoax = WordCloud(width=800, height=400, background_color='white').generate(all_text_hoax)
-    st.image(wordcloud_hoax.to_array(), use_column_width=True)
+    plt.figure(figsize=(10, 5))
+    plt.imshow(wordcloud_hoax, interpolation='bilinear')
+    plt.axis('off')
+    st.pyplot()
 
 def main():
     # Mengubah background menjadi putih dengan CSS
@@ -71,14 +81,26 @@ def main():
         """
         <style>
         .stApp {
-            background-color: white;
+            background-color: #f8f9fa;
+        }
+        .sidebar .sidebar-content {
+            background-color: #343a40;
+            color: #ffffff;
+        }
+        .stButton > button {
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+        }
+        .stButton > button:hover {
+            background-color: #0056b3;
         }
         </style>
         """,
         unsafe_allow_html=True
     )
 
-    st.markdown("<h2 style='text-align: center;'>Sistem Deteksi Berita Hoax Naive Bayes</h2>",
+    st.markdown("<h2 style='text-align: center; color: #007bff;'>Sistem Deteksi Berita Hoax Naive Bayes</h2>",
                 unsafe_allow_html=True)
 
     # Sidebar menu
@@ -89,10 +111,14 @@ def main():
     X_features, y_labels, vectorizer = preprocess_data(data)
 
     if menu == "Deteksi Berita":
-        st.markdown("**Masukkan Judul Prediksi**")
-        input_text = st.text_area("", height=150)
+        col1, col2 = st.columns([2, 1])
+        
+        with col1:
+            st.markdown("**Masukkan Judul Prediksi**")
+            input_text = st.text_area("", height=150)
 
-        detect_button = st.button("Deteksi")
+        with col2:
+            detect_button = st.button("Deteksi")
 
         if detect_button and input_text:
             # Memisahkan data untuk pelatihan dan pengujian
@@ -116,7 +142,7 @@ def main():
             color = "green" if sentiment == "Fakta" else "red"
 
             st.markdown(f"""
-    <div style="text-align: center; background-color: {color}; color: white; padding: 10px;">
+    <div style="text-align: center; background-color: {color}; color: white; padding: 20px; border-radius: 10px;">
         <strong>{sentiment}</strong>
     </div>
     """, unsafe_allow_html=True)
