@@ -7,7 +7,6 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import classification_report, confusion_matrix
 from wordcloud import WordCloud
 from scipy.sparse import csr_matrix
-from PIL import Image
 
 # Memuat model dan vectorizer yang sudah disimpan
 vectorizer = joblib.load('vectorizer.pkl')
@@ -79,6 +78,9 @@ def main():
         unsafe_allow_html=True
     )
 
+    # Tampilkan gambar di atas judul
+    st.image('Langkah Ampuh Mendeteksi Berita Hoax (1) (1).jpg', use_column_width=True)
+
     st.markdown("<h2 style='text-align: center;'>Sistem Deteksi Berita Hoax Naive Bayes</h2>",
                 unsafe_allow_html=True)
 
@@ -126,7 +128,6 @@ def main():
             st.write(f"**Probabilitas Fakta:** {prob_fakta:.2f}%")
             st.write(f"**Probabilitas Hoax:** {prob_hoax:.2f}%")
 
-    
     elif menu == "Evaluasi Model":
         # Memisahkan data untuk pelatihan dan pengujian
         X_train, X_test, y_train, y_test = train_test_split(X_features, y_labels, test_size=0.2, random_state=42)
@@ -139,8 +140,6 @@ def main():
     elif menu == "Visualisasi Word Cloud":
         # Tampilkan Word Cloud di bawah hasil
         display_wordclouds(data)
-        
-     st.image('Langkah Ampuh Mendeteksi Berita Hoax (1) (1).jpg', width=200)
 
 if __name__ == '__main__':
     main()
