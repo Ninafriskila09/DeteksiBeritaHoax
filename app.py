@@ -122,8 +122,13 @@ def main():
     </div>
     """, unsafe_allow_html=True)
 
-            st.write(f"**Probabilitas Fakta:** {prob_fakta:.2f}%")
-            st.write(f"**Probabilitas Hoax:** {prob_hoax:.2f}%")
+            # Display probabilities
+            if sentiment == "Fakta":
+                st.write(f"**Probabilitas Fakta:** {prob_fakta:.2f}%")
+                st.write(f"**Probabilitas Hoax:** {prob_hoax:.2f}%")
+            else:
+                st.write(f"**Probabilitas Fakta:** {prob_hoax:.2f}%")
+                st.write(f"**Probabilitas Hoax:** {prob_fakta:.2f}%")
 
     elif menu == "Evaluasi Model":
         # Memisahkan data untuk pelatihan dan pengujian
@@ -140,4 +145,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
