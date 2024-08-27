@@ -71,7 +71,7 @@ def home():
         """
         <style>
         .stApp {
-            background-image: url('path/to/your/background-image.jpg');
+            background-image: url('assets/Langkah Ampuh Mendeteksi Berita Hoax (1) (1) (1).jpg');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -86,7 +86,7 @@ def home():
         unsafe_allow_html=True
     )
 
-    st.image('Langkah Ampuh Mendeteksi Berita Hoax (1) (1) (1).jpg', use_column_width=True)  # Lebar gambar dalam piksel
+    st.image('assets/Langkah Ampuh Mendeteksi Berita Hoax (1) (1) (1).jpg', use_column_width=True)  # Lebar gambar dalam piksel
 
     st.markdown("<h2 style='text-align: center;'>Selamat Datang di Sistem Deteksi Berita Hoax Naive Bayes</h2>",
                 unsafe_allow_html=True)
@@ -99,6 +99,10 @@ def home():
         """,
         unsafe_allow_html=True
     )
+    st.image('Langkah Ampuh Mendeteksi Berita Hoax (1) (1) (1).jpg', use_column_width=True)  # Lebar gambar dalam piksel
+
+    st.markdown("<h2 style='text-align: center;'>Selamat Datang di Sistem Deteksi Berita Hoax Naive Bayes</h2>",
+                unsafe_allow_html=True)
 
 def main():
     # Sidebar menu
@@ -163,5 +167,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
