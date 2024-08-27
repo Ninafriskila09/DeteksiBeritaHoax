@@ -71,9 +71,9 @@ def home():
         """
         <style>
         .stApp {
-            background-image: url('assets/download (1).jpeg');
+            background-image: url('Langkah Ampuh Mendeteksi Berita Hoax (1) (1) (1).jpg');
             background-size: cover;
-            background-position: center;
+            background-repeat: no-repeat;
             background-attachment: fixed;
         }
         .custom-font {
@@ -86,11 +86,8 @@ def home():
         unsafe_allow_html=True
     )
 
-    # Check if the image path is correct
-    st.write('Checking image path...')
-    st.write('assets/download (1).jpeg')
-
-    st.image('assets/download (1).jpeg', use_column_width=True)
+    # Display the header image
+    st.image('Langkah Ampuh Mendeteksi Berita Hoax (1) (1) (1).jpg', use_column_width=True)  # Width of the image in pixels
 
     st.markdown("<h2 style='text-align: center;'>Selamat Datang di Sistem Deteksi Berita Hoax Naive Bayes</h2>",
                 unsafe_allow_html=True)
