@@ -86,7 +86,11 @@ def home():
         unsafe_allow_html=True
     )
 
-    st.image('assets/Langkah Ampuh Mendeteksi Berita Hoax (1) (1) (1).jpg', use_column_width=True)  # Lebar gambar dalam piksel
+    # Check if the image path is correct
+    st.write('Checking image path...')
+    st.write('assets/Langkah Ampuh Mendeteksi Berita Hoax (1) (1) (1).jpg')
+
+    st.image('assets/Langkah Ampuh Mendeteksi Berita Hoax (1) (1) (1).jpg', use_column_width=True)
 
     st.markdown("<h2 style='text-align: center;'>Selamat Datang di Sistem Deteksi Berita Hoax Naive Bayes</h2>",
                 unsafe_allow_html=True)
@@ -99,10 +103,7 @@ def home():
         """,
         unsafe_allow_html=True
     )
-    st.image('Langkah Ampuh Mendeteksi Berita Hoax (1) (1) (1).jpg', use_column_width=True)  # Lebar gambar dalam piksel
 
-    st.markdown("<h2 style='text-align: center;'>Selamat Datang di Sistem Deteksi Berita Hoax Naive Bayes</h2>",
-                unsafe_allow_html=True)
 
 def main():
     # Sidebar menu
