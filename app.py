@@ -90,7 +90,7 @@ def home():
     st.write('Checking image path...')
     st.write('assets/download (1).jpeg')
 
-    st.image('assets/download (1).jpeg, use_column_width=True)
+    st.image('assets/download (1).jpeg', use_column_width=True)
 
     st.markdown("<h2 style='text-align: center;'>Selamat Datang di Sistem Deteksi Berita Hoax Naive Bayes</h2>",
                 unsafe_allow_html=True)
