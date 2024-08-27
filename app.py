@@ -71,7 +71,7 @@ def home():
         """
         <style>
         .stApp {
-            background-color: black;
+            background-color: white;
         }
         </style>
         """,
