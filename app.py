@@ -73,10 +73,31 @@ def home():
         .stApp {
             background-color: white;
         }
+        .custom-font {
+            font-family: 'Arial', sans-serif;
+            font-size: 18px;
+            line-height: 1.6;
+        }
         </style>
         """,
         unsafe_allow_html=True
     )
+
+    st.image('Langkah Ampuh Mendeteksi Berita Hoax (1) (1) (1).jpg', use_column_width=True)  # Lebar gambar dalam piksel
+
+    st.markdown("<h2 style='text-align: center;'>Selamat Datang di Sistem Deteksi Berita Hoax Naive Bayes</h2>",
+                unsafe_allow_html=True)
+
+    st.markdown(
+        """
+        <p class="custom-font">
+        Sistem ini menggunakan algoritma Naive Bayes untuk mendeteksi berita hoax atau fakta dari teks yang diberikan.
+        Pilih menu di sidebar untuk melakukan deteksi berita, evaluasi model, atau melihat visualisasi word cloud dari dataset.
+        </p>
+        """,
+        unsafe_allow_html=True
+    )
+
 
     st.image('Langkah Ampuh Mendeteksi Berita Hoax (1) (1) (1).jpg', use_column_width=True)  # Lebar gambar dalam piksel
 
