@@ -66,7 +66,7 @@ def display_wordclouds(data):
     st.image(wordcloud_hoax.to_array(), use_column_width=True)
 
 def home():
-    # Mengubah background menjadi gambar dengan CSS
+    # Mengubah background menjadi transparan dengan CSS
     st.markdown(
         """
         <style>
@@ -100,6 +100,7 @@ def home():
         """,
         unsafe_allow_html=True
     )
+    
 
 
 def main():
