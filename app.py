@@ -66,12 +66,15 @@ def display_wordclouds(data):
     st.image(wordcloud_hoax.to_array(), use_column_width=True)
 
 def home():
-    # Mengubah background menjadi putih dengan CSS
+    # Mengubah background menjadi gambar dengan CSS
     st.markdown(
         """
         <style>
         .stApp {
-            background-color: white;
+            background-image: url('Langkah Ampuh Mendeteksi Berita Hoax (1) (1) (1).jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
         }
         .custom-font {
             font-family: 'Arial', sans-serif;
@@ -79,6 +82,18 @@ def home():
             line-height: 1.6;
         }
         </style>
+        """,
+        unsafe_allow_html=True
+    )
+
+    st.markdown("<h2 style='text-align: center; color: white;'>Selamat Datang di Sistem Deteksi Berita Hoax Naive Bayes</h2>",
+                unsafe_allow_html=True)
+
+    st.markdown(
+        """
+        <p style="text-align: justify; font-family: 'Times New Roman'; color: white;">
+        Sistem ini menggunakan algoritma Naive Bayes untuk mendeteksi berita hoax atau fakta dari teks berita yang diberikan. Pilih menu di sidebar untuk melakukan deteksi berita, evaluasi model, atau melihat visualisasi word cloud dari dataset.
+        </p>
         """,
         unsafe_allow_html=True
     )
