@@ -71,10 +71,10 @@ def home():
         """
         <style>
         .stApp {
-            background-image: url('Langkah Ampuh Mendeteksi Berita Hoax (1) (1) (1).jpg');
+            background-image: url('path/to/your/background-image.jpg');
             background-size: cover;
             background-position: center;
-            background-repeat: no-repeat;
+            background-attachment: fixed;
         }
         .custom-font {
             font-family: 'Arial', sans-serif;
@@ -82,18 +82,6 @@ def home():
             line-height: 1.6;
         }
         </style>
-        """,
-        unsafe_allow_html=True
-    )
-
-    st.markdown("<h2 style='text-align: center; color: white;'>Selamat Datang di Sistem Deteksi Berita Hoax Naive Bayes</h2>",
-                unsafe_allow_html=True)
-
-    st.markdown(
-        """
-        <p style="text-align: justify; font-family: 'Times New Roman'; color: white;">
-        Sistem ini menggunakan algoritma Naive Bayes untuk mendeteksi berita hoax atau fakta dari teks berita yang diberikan. Pilih menu di sidebar untuk melakukan deteksi berita, evaluasi model, atau melihat visualisasi word cloud dari dataset.
-        </p>
         """,
         unsafe_allow_html=True
     )
@@ -111,7 +99,6 @@ def home():
         """,
         unsafe_allow_html=True
     )
-
 
 def main():
     # Sidebar menu
@@ -176,3 +163,5 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
