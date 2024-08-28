@@ -66,7 +66,7 @@ def load_html():
         return file.read()
 
 def load_css():
-    css_file_path = "path/to/your/styles.css"  # Ganti dengan path yang benar
+    css_file_path = "path/to/your/style.css"  # Ganti dengan path yang benar
     try:
         with open(css_file_path, "r") as file:
             return file.read()
