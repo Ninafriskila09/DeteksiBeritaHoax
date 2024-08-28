@@ -69,12 +69,12 @@ def home():
 
     st.markdown("<h2 style='text-align: center;'>Selamat Datang di Sistem Deteksi Berita Hoax Naive Bayes</h2>",
                 unsafe_allow_html=True)
-    # Mengubah background menjadi transparan dengan CSS
+    
     st.markdown(
         """
         <style>
         .stApp {
-            background-color: #f0f0f0;
+            background-color: white;
             background-size: cover;
             background-repeat: no-repeat;
             background-attachment: fixed;
