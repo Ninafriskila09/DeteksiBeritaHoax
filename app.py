@@ -76,6 +76,24 @@ def image_to_base64(img):
     return img_str
 
 def home():
+     st.markdown(
+        """
+        <style>
+        /* CSS untuk mengubah warna sidebar */
+        .css-1d391kg { /* Ganti dengan kelas yang benar untuk sidebar */
+            background-color: #d5a6f1; /* Warna pastel ungu */
+        }
+        .css-1d391kg .css-1r3bdp2 { /* Ganti dengan kelas yang benar untuk teks di sidebar */
+            color: #ffffff; /* Warna teks putih untuk kontras */
+        }
+        .css-1d391kg .css-1r3bdp2:hover { /* Gaya saat hover */
+            color: #ffeb3b; /* Warna teks kuning saat hover */
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
     # Menyisipkan CSS untuk mengubah warna latar belakang
     st.markdown(
         """
