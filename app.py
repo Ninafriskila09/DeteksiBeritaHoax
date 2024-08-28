@@ -74,7 +74,20 @@ with open(html_file_path, "r") as file:
 
 components.html(html_code, height=600)
 
+# Baca CSS dari file eksternal
+with open("path/to/your/styles.css") as f:
+    css_content = f.read()
 
+# Tambahkan CSS ke dalam aplikasi Streamlit
+st.markdown(f"<style>{css_content}</style>", unsafe_allow_html=True)
+
+# Tambahkan HTML yang menggunakan CSS
+st.markdown("""
+    <div class="custom-style">
+        <h1>This is a header styled with external CSS!</h1>
+        <p>Styled with an external CSS file loaded into the app.</p>
+    </div>
+""", unsafe_allow_html=True)
 
 def home():
     # Mengubah background menjadi transparan dengan CSS
