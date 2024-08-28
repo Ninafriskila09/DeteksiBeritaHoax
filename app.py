@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import joblib
+import streamlit.components.v1 as components
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.naive_bayes import GaussianNB
@@ -69,6 +70,14 @@ def display_wordclouds(data):
         width=800, height=400, background_color='white').generate(all_text_hoax)
     st.image(wordcloud_hoax.to_array(), use_column_width=True)
 
+def load_html():
+    html_file_path = "index.html"
+    try:
+        with open(html_file_path, "r") as file:
+            return file.read()
+    except FileNotFoundError:
+        st.error(f"HTML file not found at path: {html_file_path}")
+        return ""
 
 def main():
     # Mengubah background menjadi putih dengan CSS
