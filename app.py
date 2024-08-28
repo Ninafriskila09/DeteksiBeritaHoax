@@ -1,6 +1,8 @@
 import streamlit as st
 import pandas as pd
 import joblib
+import base64
+import io
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.naive_bayes import GaussianNB
@@ -66,36 +68,42 @@ def display_wordclouds(data):
     wordcloud_hoax = WordCloud(width=800, height=400, background_color='white').generate(all_text_hoax)
     st.image(wordcloud_hoax.to_array(), use_column_width=True)
 
+def image_to_base64(img):
+    """Convert image to base64 string."""
+    buffered = io.BytesIO()
+    img.save(buffered, format="JPEG")
+    img_str = base64.b64encode(buffered.getvalue()).decode("utf-8")
+    return img_str
+
 def home():
     st.title("Selamat Datang di Sistem Deteksi Berita Hoax Naive Bayes")
 
-    # Widget untuk mengunggah gambar
-    uploaded_file = st.file_uploader("Pilih gambar untuk diunggah", type=["jpg", "jpeg", "png"])
+    # Path ke gambar yang ingin ditampilkan
+    image_path = 'Langkah Ampuh Mendeteksi Berita Hoax (1) (1) (1) (1).jpg'
+    
+    # Membaca gambar dari file
+    image = Image.open(image_path)
 
-    if uploaded_file is not None:
-        # Membaca gambar yang diunggah
-        image = Image.open(uploaded_file)
+    # Mengonversi gambar ke base64
+    image_base64 = image_to_base64(image)
 
-        # Menampilkan gambar di Streamlit
-        st.image(image, caption='Gambar yang diunggah', use_column_width=True)
-
-        # Menampilkan teks di samping gambar
-        st.markdown(
-            """
-            <div style="display: flex; align-items: center;">
-                <img src="data:image/jpeg;base64,{image_base64}" width="300" style="margin-right: 20px;"/>
-                <div style="max-width: 600px;">
-                    <p style="text-align: justify; font-family: 'Times New Roman';">
-                    Hoax, atau berita palsu, adalah informasi yang tidak benar yang disebarluaskan dengan tujuan untuk menipu, menyesatkan, atau mengelabui publik.
-                    Hoax dapat berupa berita, gambar, video, atau informasi yang sengaja dibuat untuk tampak seperti fakta padahal sebenarnya tidak benar.
-                    Hoax dapat merusak reputasi individu, organisasi, atau kelompok tertentu. Hoax dapat mempengaruhi kebijakan publik atau keputusan penting dengan cara yang tidak benar.
-                    Hoax adalah masalah serius di era digital ini, dan penting bagi setiap orang untuk bersikap kritis terhadap informasi yang mereka terima dan bagikan.
-                    </p>
-                </div>
+    # Menampilkan gambar dan teks di Streamlit
+    st.markdown(
+        f"""
+        <div style="display: flex; align-items: flex-start;">
+            <img src="data:image/jpeg;base64,{image_base64}" width="300" style="margin-right: 20px;"/>
+            <div style="max-width: 600px;">
+            <p style="text-align: justify; font-family: 'Times New Roman';">
+                Hoax, atau berita palsu, adalah informasi yang tidak benar yang disebarluaskan dengan tujuan untuk menipu, menyesatkan, atau mengelabui publik.
+                Hoax dapat berupa berita, gambar, video, atau informasi yang sengaja dibuat untuk tampak seperti fakta padahal sebenarnya tidak benar.
+                Hoax dapat merusak reputasi individu, organisasi, atau kelompok tertentu. Hoax dapat mempengaruhi kebijakan publik atau keputusan penting dengan cara yang tidak benar.
+                Hoax adalah masalah serius di era digital ini, dan penting bagi setiap orang untuk bersikap kritis terhadap informasi yang mereka terima dan bagikan.
+                </p>
             </div>
-            """,
-            unsafe_allow_html=True
-        )
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
 def main():
     # Sidebar menu
