@@ -89,7 +89,6 @@ def home():
         unsafe_allow_html=True
     )
 
-   import streamlit as st
 
 # Tentukan lebar gambar yang diinginkan
 image_width = 400  # Ganti dengan lebar gambar yang diinginkan
