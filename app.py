@@ -80,14 +80,7 @@ def load_html():
         st.error(f"HTML file not found at path: {html_file_path}")
         return ""
 
-def load_css():
-    css_file_path = "path/to/your/style.css"  # Ganti dengan path yang benar
-    try:
-        with open(css_file_path, "r") as file:
-            return file.read()
-    except FileNotFoundError:
-        st.error(f"CSS file not found at path: {css_file_path}")
-        return ""
+
 
 def home():
     # Mengubah background menjadi transparan dengan CSS
