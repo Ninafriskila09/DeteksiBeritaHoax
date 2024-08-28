@@ -66,10 +66,8 @@ def display_wordclouds(data):
     st.image(wordcloud_hoax.to_array(), use_column_width=True)
 
 def home():
+    image_width = 400  # Definisikan lebar gambar
 
-    st.markdown("<h2 style='text-align: center;'>Selamat Datang di Sistem Deteksi Berita Hoax Naive Bayes</h2>",
-                unsafe_allow_html=True)
-    
     st.markdown(
         """
         <style>
@@ -88,34 +86,34 @@ def home():
         """,
         unsafe_allow_html=True
     )
-
-st.markdown(
-    f"""
-    <style>
-        @media (max-width: 768px) {{
-            .image-text-container {{
-                flex-direction: column;
+    
+    st.markdown(
+        f"""
+        <style>
+            @media (max-width: 768px) {{
+                .image-text-container {{
+                    flex-direction: column;
+                }}
+                .image-text-container img {{
+                    width: 100%;
+                    margin-right: 0;
+                }}
             }}
-            .image-text-container img {{
-                width: 100%;
-                margin-right: 0;
-            }}
-        }}
-    </style>
-    <div class="image-text-container" style="display: flex; align-items: center;">
-        <img src='Langkah Ampuh Mendeteksi Berita Hoax (1) (1) (1) (1).jpg' width='{image_width}' style="margin-right: 20px;"/>
-        <div style="max-width: 600px;">
-            <p style="text-align: justify; font-family: 'Times New Roman';">
-            Hoax, atau berita palsu, adalah informasi yang tidak benar yang disebarluaskan dengan tujuan untuk menipu, menyesatkan, atau mengelabui publik.
-            Hoax dapat berupa berita, gambar, video, atau informasi yang sengaja dibuat untuk tampak seperti fakta padahal sebenarnya tidak benar.
-            Hoax dapat merusak reputasi individu, organisasi, atau kelompok tertentu. Hoax dapat mempengaruhi kebijakan publik atau keputusan penting dengan cara yang tidak benar.
-            Hoax adalah masalah serius di era digital ini, dan penting bagi setiap orang untuk bersikap kritis terhadap informasi yang mereka terima dan bagikan.
-            </p>
+        </style>
+        <div class="image-text-container" style="display: flex; align-items: center;">
+            <img src='Langkah Ampuh Mendeteksi Berita Hoax (1) (1) (1) (1).jpg' width='{image_width}' style="margin-right: 20px;"/>
+            <div style="max-width: 600px;">
+                <p style="text-align: justify; font-family: 'Times New Roman';">
+                Hoax, atau berita palsu, adalah informasi yang tidak benar yang disebarluaskan dengan tujuan untuk menipu, menyesatkan, atau mengelabui publik.
+                Hoax dapat berupa berita, gambar, video, atau informasi yang sengaja dibuat untuk tampak seperti fakta padahal sebenarnya tidak benar.
+                Hoax dapat merusak reputasi individu, organisasi, atau kelompok tertentu. Hoax dapat mempengaruhi kebijakan publik atau keputusan penting dengan cara yang tidak benar.
+                Hoax adalah masalah serius di era digital ini, dan penting bagi setiap orang untuk bersikap kritis terhadap informasi yang mereka terima dan bagikan.
+                </p>
+            </div>
         </div>
-    </div>
-    """,
-    unsafe_allow_html=True
-)
+        """,
+        unsafe_allow_html=True
+    )
 
 def main():
     # Sidebar menu
