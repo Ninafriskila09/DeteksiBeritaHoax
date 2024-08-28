@@ -95,7 +95,16 @@ def home():
     st.markdown(
         """
         <p style="text-align: justify; font-family: 'Times New Roman';">
-        Sistem ini menggunakan algoritma Naive Bayes untuk mendeteksi berita hoax atau fakta dari teks berita yang diberikan. Pilih menu di sidebar untuk melakukan deteksi berita, evaluasi model, atau melihat visualisasi word cloud dari dataset.
+        Hoax, atau berita palsu, adalah informasi yang tidak benar yang disebarluaskan dengan tujuan untuk menipu, menyesatkan, atau mengelabui publik.
+        Hoax dapat berupa berita, gambar, video, atau informasi yang sengaja dibuat untuk tampak seperti fakta padahal sebenarnya tidak benar.
+        Hoax dapat merusak reputasi individu, organisasi, atau kelompok tertentu. Hoax dapat mempengaruhi kebijakan publik atau keputusan penting dengan cara yang tidak benar.
+        Hoax adalah masalah serius di era digital ini, dan penting bagi setiap orang untuk bersikap kritis terhadap informasi yang mereka terima dan bagikan.
+
+
+
+
+
+
         </p>
         """,
         unsafe_allow_html=True
