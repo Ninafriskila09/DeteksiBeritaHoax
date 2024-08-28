@@ -66,6 +66,8 @@ def display_wordclouds(data):
     st.image(wordcloud_hoax.to_array(), use_column_width=True)
 
 def home():
+    st.markdown("<h2 style='text-align: center;'>Selamat Datang di Sistem Deteksi Berita Hoax Naive Bayes</h2>",
+                unsafe_allow_html=True)
     # Mengubah background menjadi transparan dengan CSS
     st.markdown(
         """
@@ -88,9 +90,6 @@ def home():
 
     # Display the header image
     st.image('Langkah Ampuh Mendeteksi Berita Hoax (1) (1) (1).jpg', use_column_width=True)  # Width of the image in pixels
-
-    st.markdown("<h2 style='text-align: center;'>Selamat Datang di Sistem Deteksi Berita Hoax Naive Bayes</h2>",
-                unsafe_allow_html=True)
 
     st.markdown(
         """
