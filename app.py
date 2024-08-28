@@ -1,12 +1,14 @@
 import streamlit as st
 import pandas as pd
 import joblib
+import streamlit.components.v1 as components
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import classification_report, confusion_matrix
 from wordcloud import WordCloud
 from scipy.sparse import csr_matrix
+
 
 # Memuat model dan vectorizer yang sudah disimpan
 vectorizer = joblib.load('vectorizer.pkl')
@@ -64,6 +66,10 @@ def display_wordclouds(data):
     all_text_hoax = ' '.join(hoax['clean_text'])
     wordcloud_hoax = WordCloud(width=800, height=400, background_color='white').generate(all_text_hoax)
     st.image(wordcloud_hoax.to_array(), use_column_width=True)
+
+# Masukkan file HTML yang telah dikemas
+components.html(open("path/to/your/index.html").read(),
+    height=600
 
 def home():
     # Mengubah background menjadi transparan dengan CSS
