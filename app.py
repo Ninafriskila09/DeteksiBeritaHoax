@@ -80,6 +80,16 @@ def load_html():
         return ""
 
 def main():
+    st.title("HTML Viewer")
+
+    # Load HTML content
+    html_content = load_html()
+    
+    # Display HTML content if available
+    if html_content:
+        st.markdown(html_content, unsafe_allow_html=True)
+
+def main():
     # Mengubah background menjadi putih dengan CSS
     st.markdown(
         """
