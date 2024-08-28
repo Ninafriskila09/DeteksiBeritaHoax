@@ -67,10 +67,15 @@ def display_wordclouds(data):
     wordcloud_hoax = WordCloud(width=800, height=400, background_color='white').generate(all_text_hoax)
     st.image(wordcloud_hoax.to_array(), use_column_width=True)
 
-# Masukkan file HTML yang telah dikemas
-components.html(open("path/to/your/index.html").read(),
-    height=600
-)
+
+html_file_path = "index.html"
+with open(html_file_path, "r") as file:
+    html_code = file.read()
+
+components.html(html_code, height=600)
+
+
+
 def home():
     # Mengubah background menjadi transparan dengan CSS
     st.markdown(
