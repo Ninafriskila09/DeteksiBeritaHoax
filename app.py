@@ -89,26 +89,39 @@ def home():
         unsafe_allow_html=True
     )
 
-    # Display the header image
-    st.image('Langkah Ampuh Mendeteksi Berita Hoax (1) (1) (1).jpg', use_column_width=True)  # Width of the image in pixels
+   import streamlit as st
 
-    st.markdown(
-        """
-        <p style="text-align: justify; font-family: 'Times New Roman';">
-        Hoax, atau berita palsu, adalah informasi yang tidak benar yang disebarluaskan dengan tujuan untuk menipu, menyesatkan, atau mengelabui publik.
-        Hoax dapat berupa berita, gambar, video, atau informasi yang sengaja dibuat untuk tampak seperti fakta padahal sebenarnya tidak benar.
-        Hoax dapat merusak reputasi individu, organisasi, atau kelompok tertentu. Hoax dapat mempengaruhi kebijakan publik atau keputusan penting dengan cara yang tidak benar.
-        Hoax adalah masalah serius di era digital ini, dan penting bagi setiap orang untuk bersikap kritis terhadap informasi yang mereka terima dan bagikan.
+# Tentukan lebar gambar yang diinginkan
+image_width = 400  # Ganti dengan lebar gambar yang diinginkan
 
+st.markdown(
+    f"""
+    <style>
+        @media (max-width: 768px) {{
+            .image-text-container {{
+                flex-direction: column;
+            }}
+            .image-text-container img {{
+                width: 100%;
+                margin-right: 0;
+            }}
+        }}
+    </style>
+    <div class="image-text-container" style="display: flex; align-items: center;">
+        <img src='Langkah Ampuh Mendeteksi Berita Hoax (1) (1) (1).jpg' width='{image_width}' style="margin-right: 20px;"/>
+        <div style="max-width: 600px;">
+            <p style="text-align: justify; font-family: 'Times New Roman';">
+            Hoax, atau berita palsu, adalah informasi yang tidak benar yang disebarluaskan dengan tujuan untuk menipu, menyesatkan, atau mengelabui publik.
+            Hoax dapat berupa berita, gambar, video, atau informasi yang sengaja dibuat untuk tampak seperti fakta padahal sebenarnya tidak benar.
+            Hoax dapat merusak reputasi individu, organisasi, atau kelompok tertentu. Hoax dapat mempengaruhi kebijakan publik atau keputusan penting dengan cara yang tidak benar.
+            Hoax adalah masalah serius di era digital ini, dan penting bagi setiap orang untuk bersikap kritis terhadap informasi yang mereka terima dan bagikan.
+            </p>
+        </div>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
-
-
-
-
-        </p>
-        """,
-        unsafe_allow_html=True
-    )
     
 
 
