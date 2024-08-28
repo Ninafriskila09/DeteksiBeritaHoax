@@ -89,10 +89,6 @@ def home():
         unsafe_allow_html=True
     )
 
-
-# Tentukan lebar gambar yang diinginkan
-image_width = 200
-
 st.markdown(
     f"""
     <style>
@@ -120,9 +116,6 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
-
-    
-
 
 def main():
     # Sidebar menu
