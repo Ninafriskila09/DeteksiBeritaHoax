@@ -66,7 +66,6 @@ def display_wordclouds(data):
     st.image(wordcloud_hoax.to_array(), use_column_width=True)
 
 def home():
-    image_width = 400  # Definisikan lebar gambar
 
     st.markdown(
         """
