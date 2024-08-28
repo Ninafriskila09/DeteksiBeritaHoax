@@ -9,33 +9,27 @@ from sklearn.metrics import classification_report, confusion_matrix
 from wordcloud import WordCloud
 from scipy.sparse import csr_matrix
 
-# Memuat model dan vectorizer yang sudah disimpan
-model = joblib.load('vectorizer.pkl')
+# Load the model and vectorizer
+model = joblib.load('model.pkl')  # Assuming 'model.pkl' is your trained model file
+vectorizer = joblib.load('vectorizer.pkl')  # Assuming 'vectorizer.pkl' is your vectorizer file
 
-# Memuat data tambahan jika diperlukan
+# Load the dataset
 dataset = pd.read_excel('dataset_clean.xlsx')
-
 
 def load_data():
     return dataset
 
-
 def preprocess_data(data):
     X_raw = data["clean_text"]
     y_raw = data["Label"]
-
-    vectorizer = TfidfVectorizer(ngram_range=(1, 2))
-    X_TFIDF = vectorizer.fit_transform(X_raw)
-
-    return X_TFIDF, y_raw, vectorizer
-
+    X_TFIDF = vectorizer.transform(X_raw)
+    return X_TFIDF, y_raw
 
 def train_model(X_train, y_train):
     NB = GaussianNB()
     X_train_dense = csr_matrix.toarray(X_train)
     NB.fit(X_train_dense, y_train)
     return NB
-
 
 def display_evaluation(y_test, y_pred):
     st.write("Classification Report:")
@@ -48,26 +42,22 @@ def display_evaluation(y_test, y_pred):
     st.write("Confusion Matrix:")
     st.write(df_cm)
 
-
 def display_wordclouds(data):
-    st.write("Word Cloud untuk Semua Data:")
+    st.write("Word Cloud for All Data:")
     all_text = ' '.join(data['clean_text'])
-    wordcloud_all = WordCloud(width=800, height=400,
-                              background_color='white').generate(all_text)
+    wordcloud_all = WordCloud(width=800, height=400, background_color='white').generate(all_text)
     st.image(wordcloud_all.to_array(), use_column_width=True)
 
-    st.write("Word Cloud untuk Fakta:")
+    st.write("Word Cloud for Facts:")
     fakta = data[data['Label'] == 1]
     all_text_fakta = ' '.join(fakta['clean_text'])
-    wordcloud_fakta = WordCloud(
-        width=800, height=400, background_color='white').generate(all_text_fakta)
+    wordcloud_fakta = WordCloud(width=800, height=400, background_color='white').generate(all_text_fakta)
     st.image(wordcloud_fakta.to_array(), use_column_width=True)
 
-    st.write("Word Cloud untuk Hoax:")
+    st.write("Word Cloud for Hoaxes:")
     hoax = data[data['Label'] == 0]
     all_text_hoax = ' '.join(hoax['clean_text'])
-    wordcloud_hoax = WordCloud(
-        width=800, height=400, background_color='white').generate(all_text_hoax)
+    wordcloud_hoax = WordCloud(width=800, height=400, background_color='white').generate(all_text_hoax)
     st.image(wordcloud_hoax.to_array(), use_column_width=True)
 
 def load_html():
@@ -80,7 +70,7 @@ def load_html():
         return ""
 
 def main():
-    st.title("HTML Viewer")
+    st.title("HTML Viewer and Hoax Detection")
 
     # Load HTML content
     html_content = load_html()
@@ -89,78 +79,41 @@ def main():
     if html_content:
         st.markdown(html_content, unsafe_allow_html=True)
 
-def main():
-    # Mengubah background menjadi putih dengan CSS
-    st.markdown(
-        """
-        <style>
-        .stApp {
-            background-color: white;
-        }
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
-
-    st.markdown("<h2 style='text-align: center;'>Sistem Deteksi Berita Hoax Naive Bayes</h2>",
-                unsafe_allow_html=True)
-
-    st.write(" ")
-
-    # Membuat layout untuk komponen input dan tombol di tengah
-    st.markdown("""
-        <style>
-        .container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-        }
-        </style>
-    """, unsafe_allow_html=True)
-
-    # Kontainer untuk elemen-elemen di tengah
-    st.markdown('<div class="container">', unsafe_allow_html=True)
-
-    # Load data dan preprocess
+    # Load data and preprocess
     data = load_data()
-    X_features, y_labels, vectorizer = preprocess_data(data)
+    X_features, y_labels = preprocess_data(data)
 
-    # Memisahkan data untuk pelatihan dan pengujian
-    X_train, X_test, y_train, y_test = train_test_split(
-        X_features, y_labels, test_size=0.2, random_state=42)
+    # Split data for training and testing
+    X_train, X_test, y_train, y_test = train_test_split(X_features, y_labels, test_size=0.2, random_state=42)
     model = train_model(X_train, y_train)
 
-    # Input teks untuk diprediksi
-    st.markdown("**Masukkan Judul Prediksi**")
+    # Input text for prediction
+    st.markdown("**Enter Text for Prediction**")
     input_text = st.text_area("", height=150)
 
-    # Tombol deteksi
-    detect_button = st.button("Deteksi")
+    # Detection button
+    detect_button = st.button("Detect")
 
-    st.markdown('</div>', unsafe_allow_html=True)
-
-    # Bagian untuk menampilkan hasil deteksi
-    st.write("Hasil deteksi:")
+    # Display results
     if detect_button and input_text:
-        # Transformasi teks dengan vectorizer yang digunakan untuk melatih model
+        # Transform text with vectorizer used to train the model
         input_text_tfidf = vectorizer.transform([input_text])
         input_text_dense = csr_matrix.toarray(input_text_tfidf)
 
-        # Prediksi menggunakan model yang telah dimuat
+        # Predict using the model
         prediction = model.predict(input_text_dense)
-        sentiment = "Fakta" if prediction[0] == 0 else "Hoax"
+        sentiment = "Fact" if prediction[0] == 0 else "Hoax"
 
-        # Menampilkan hasil
+        # Display result
         st.markdown(f"**{sentiment}**")
 
-        # Evaluasi model
+        # Evaluate the model
         y_pred = model.predict(csr_matrix.toarray(X_test))
         display_evaluation(y_test, y_pred)
 
-        # Tampilkan Word Cloud di bawah hasil
+        # Display Word Clouds
         display_wordclouds(data)
-
 
 if __name__ == '__main__':
     main()
+
