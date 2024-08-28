@@ -66,6 +66,31 @@ def display_wordclouds(data):
     st.image(wordcloud_hoax.to_array(), use_column_width=True)
 
 def home():
+    st.markdown(
+        """
+        <style>
+        .stApp {
+            background-image: url('background.jpg');  /* Add your background image here */
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+        .stSidebar {
+            background-color: #f0f0f0; /* Sidebar background color */
+        }
+        .css-18e3th9 {
+            background-color: #004d99; /* Header background color */
+        }
+        .custom-font {
+            font-family: 'Arial', sans-serif;
+            font-size: 18px;
+            line-height: 1.6;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
     st.markdown("<h2 style='text-align: center;'>Selamat Datang di Sistem Deteksi Berita Hoax Naive Bayes</h2>",
                 unsafe_allow_html=True)
     # Mengubah background menjadi transparan dengan CSS
