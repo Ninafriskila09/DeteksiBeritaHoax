@@ -76,8 +76,13 @@ def image_to_base64(img):
     return img_str
 
 def home():
-    st.title("Selamat Datang di Sistem Deteksi Berita Hoax Naive Bayes")
-
+    st.markdown(
+        """
+        <h1 style="text-align: center;">Selamat Datang di Sistem Deteksi Berita Hoax Naive Bayes</h1>
+        """,
+        unsafe_allow_html=True
+    )
+    
     # Path ke gambar yang ingin ditampilkan
     image_path = 'Langkah Ampuh Mendeteksi Berita Hoax (1) (1) (1) (1).jpg'
     
