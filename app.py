@@ -91,7 +91,7 @@ def home():
 
 
 # Tentukan lebar gambar yang diinginkan
-image_width = 400  # Ganti dengan lebar gambar yang diinginkan
+image_width = 200
 
 st.markdown(
     f"""
