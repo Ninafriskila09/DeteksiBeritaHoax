@@ -107,7 +107,7 @@ st.markdown(
         }}
     </style>
     <div class="image-text-container" style="display: flex; align-items: center;">
-        <img src='Langkah Ampuh Mendeteksi Berita Hoax (1) (1) (1).jpg' width='{image_width}' style="margin-right: 20px;"/>
+        <img src='Langkah Ampuh Mendeteksi Berita Hoax (1) (1) (1)(1).jpg' width='{image_width}' style="margin-right: 20px;"/>
         <div style="max-width: 600px;">
             <p style="text-align: justify; font-family: 'Times New Roman';">
             Hoax, atau berita palsu, adalah informasi yang tidak benar yang disebarluaskan dengan tujuan untuk menipu, menyesatkan, atau mengelabui publik.
