@@ -6,6 +6,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import classification_report, confusion_matrix
 from wordcloud import WordCloud
+from PIL import Image
 from scipy.sparse import csr_matrix
 
 # Memuat model dan vectorizer yang sudah disimpan
@@ -66,53 +67,35 @@ def display_wordclouds(data):
     st.image(wordcloud_hoax.to_array(), use_column_width=True)
 
 def home():
+    st.title("Selamat Datang di Sistem Deteksi Berita Hoax Naive Bayes")
 
-    st.markdown(
-        """
-        <style>
-        .stApp {
-            background-color: white;
-            background-size: cover;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-        }
-        .custom-font {
-            font-family: 'Arial', sans-serif;
-            font-size: 18px;
-            line-height: 1.6;
-        }
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
-    
-    st.markdown(
-        f"""
-        <style>
-            @media (max-width: 768px) {{
-                .image-text-container {{
-                    flex-direction: column;
-                }}
-                .image-text-container img {{
-                    width: 100%;
-                    margin-right: 0;
-                }}
-            }}
-        </style>
-        <div class="image-text-container" style="display: flex; align-items: center;">
-            <img src='Langkah Ampuh Mendeteksi Berita Hoax (1) (1) (1) (1).jpg' width='{image_width}' style="margin-right: 20px;"/>
-            <div style="max-width: 600px;">
-                <p style="text-align: justify; font-family: 'Times New Roman';">
-                Hoax, atau berita palsu, adalah informasi yang tidak benar yang disebarluaskan dengan tujuan untuk menipu, menyesatkan, atau mengelabui publik.
-                Hoax dapat berupa berita, gambar, video, atau informasi yang sengaja dibuat untuk tampak seperti fakta padahal sebenarnya tidak benar.
-                Hoax dapat merusak reputasi individu, organisasi, atau kelompok tertentu. Hoax dapat mempengaruhi kebijakan publik atau keputusan penting dengan cara yang tidak benar.
-                Hoax adalah masalah serius di era digital ini, dan penting bagi setiap orang untuk bersikap kritis terhadap informasi yang mereka terima dan bagikan.
-                </p>
+    # Widget untuk mengunggah gambar
+    uploaded_file = st.file_uploader("Pilih gambar untuk diunggah", type=["jpg", "jpeg", "png"])
+
+    if uploaded_file is not None:
+        # Membaca gambar yang diunggah
+        image = Image.open(uploaded_file)
+
+        # Menampilkan gambar di Streamlit
+        st.image(image, caption='Gambar yang diunggah', use_column_width=True)
+
+        # Menampilkan teks di samping gambar
+        st.markdown(
+            """
+            <div style="display: flex; align-items: center;">
+                <img src="data:image/jpeg;base64,{image_base64}" width="300" style="margin-right: 20px;"/>
+                <div style="max-width: 600px;">
+                    <p style="text-align: justify; font-family: 'Times New Roman';">
+                    Hoax, atau berita palsu, adalah informasi yang tidak benar yang disebarluaskan dengan tujuan untuk menipu, menyesatkan, atau mengelabui publik.
+                    Hoax dapat berupa berita, gambar, video, atau informasi yang sengaja dibuat untuk tampak seperti fakta padahal sebenarnya tidak benar.
+                    Hoax dapat merusak reputasi individu, organisasi, atau kelompok tertentu. Hoax dapat mempengaruhi kebijakan publik atau keputusan penting dengan cara yang tidak benar.
+                    Hoax adalah masalah serius di era digital ini, dan penting bagi setiap orang untuk bersikap kritis terhadap informasi yang mereka terima dan bagikan.
+                    </p>
+                </div>
             </div>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+            """,
+            unsafe_allow_html=True
+        )
 
 def main():
     # Sidebar menu
