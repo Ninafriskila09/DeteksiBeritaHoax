@@ -9,11 +9,8 @@ from sklearn.metrics import classification_report, confusion_matrix
 from wordcloud import WordCloud
 from scipy.sparse import csr_matrix
 
-
 # Memuat model dan vectorizer yang sudah disimpan
 vectorizer = joblib.load('vectorizer.pkl')
-
-# Memuat data tambahan jika diperlukan
 dataset = pd.read_excel('dataset_clean.xlsx')
 
 def load_data():
@@ -51,15 +48,11 @@ def display_wordclouds(data):
     wordcloud_all = WordCloud(width=800, height=400, background_color='white').generate(all_text)
     st.image(wordcloud_all.to_array(), use_column_width=True)
 
-    st.markdown("<br>", unsafe_allow_html=True)
-
     st.write("**Word Cloud untuk Fakta:**")
     fakta = data[data['Label'] == 0]  # Fakta adalah label 0
     all_text_fakta = ' '.join(fakta['clean_text'])
     wordcloud_fakta = WordCloud(width=800, height=400, background_color='white').generate(all_text_fakta)
     st.image(wordcloud_fakta.to_array(), use_column_width=True)
-
-    st.markdown("<br>", unsafe_allow_html=True)
 
     st.write("**Word Cloud untuk Hoax:**")
     hoax = data[data['Label'] == 1]  # Hoax adalah label 1
@@ -67,27 +60,15 @@ def display_wordclouds(data):
     wordcloud_hoax = WordCloud(width=800, height=400, background_color='white').generate(all_text_hoax)
     st.image(wordcloud_hoax.to_array(), use_column_width=True)
 
+def load_html():
+    html_file_path = "index.html"
+    with open(html_file_path, "r") as file:
+        return file.read()
 
-html_file_path = "index.html"
-with open(html_file_path, "r") as file:
-    html_code = file.read()
-
-components.html(html_code, height=600)
-
-# Baca CSS dari file eksternal
-with open("path/to/your/styles.css") as f:
-    css_content = f.read()
-
-# Tambahkan CSS ke dalam aplikasi Streamlit
-st.markdown(f"<style>{css_content}</style>", unsafe_allow_html=True)
-
-# Tambahkan HTML yang menggunakan CSS
-st.markdown("""
-    <div class="custom-style">
-        <h1>This is a header styled with external CSS!</h1>
-        <p>Styled with an external CSS file loaded into the app.</p>
-    </div>
-""", unsafe_allow_html=True)
+def load_css():
+    css_file_path = "path/to/your/styles.css"
+    with open(css_file_path, "r") as file:
+        return file.read()
 
 def home():
     # Mengubah background menjadi transparan dengan CSS
@@ -111,7 +92,7 @@ def home():
     )
 
     # Display the header image
-    st.image('Langkah Ampuh Mendeteksi Berita Hoax (1) (1) (1).jpg', use_column_width=True)  # Width of the image in pixels
+    st.image('Langkah Ampuh Mendeteksi Berita Hoax (1) (1) (1).jpg', use_column_width=True)
 
     st.markdown("<h2 style='text-align: center;'>Selamat Datang di Sistem Deteksi Berita Hoax Naive Bayes</h2>",
                 unsafe_allow_html=True)
@@ -125,8 +106,14 @@ def home():
         unsafe_allow_html=True
     )
 
-
 def main():
+    # Load HTML and CSS
+    html_code = load_html()
+    css_content = load_css()
+
+    # Apply CSS globally
+    st.markdown(f"<style>{css_content}</style>", unsafe_allow_html=True)
+
     # Sidebar menu
     menu = st.sidebar.radio("Pilih Menu", ["Home", "Deteksi Berita", "Evaluasi Model", "Visualisasi Word Cloud"])
 
