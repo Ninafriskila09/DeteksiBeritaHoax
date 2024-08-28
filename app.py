@@ -76,6 +76,17 @@ def image_to_base64(img):
     return img_str
 
 def home():
+    # Menyisipkan CSS untuk mengubah warna latar belakang
+    st.markdown(
+        """
+        <style>
+        .stApp {
+            background-color: #f4c2c2; /* Pastel pink background color */
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
     st.markdown(
         """
         <h1 style="text-align: center;">Selamat Datang di Sistem Deteksi Berita Hoax Naive Bayes</h1>
