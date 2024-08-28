@@ -70,7 +70,7 @@ def display_wordclouds(data):
 # Masukkan file HTML yang telah dikemas
 components.html(open("path/to/your/index.html").read(),
     height=600
-
+)
 def home():
     # Mengubah background menjadi transparan dengan CSS
     st.markdown(
