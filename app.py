@@ -9,8 +9,19 @@ from sklearn.metrics import classification_report, confusion_matrix
 from wordcloud import WordCloud
 from scipy.sparse import csr_matrix
 
-# Memuat model dan vectorizer yang sudah disimpan
-vectorizer = joblib.load('vectorizer.pkl')
+# Coba memuat model dan vectorizer yang sudah disimpan
+try:
+    vectorizer = joblib.load('vectorizer.pkl')
+except EOFError:
+    st.error("Terjadi kesalahan saat memuat file vectorizer.pkl. File mungkin rusak atau tidak lengkap.")
+    vectorizer = None
+except FileNotFoundError:
+    st.error("File vectorizer.pkl tidak ditemukan. Pastikan file ada di lokasi yang benar.")
+    vectorizer = None
+except Exception as e:
+    st.error(f"Terjadi kesalahan: {e}")
+    vectorizer = None
+
 dataset = pd.read_excel('dataset_clean.xlsx')
 
 def load_data():
@@ -62,11 +73,15 @@ def display_wordclouds(data):
 
 def load_html():
     html_file_path = "index.html"
-    with open(html_file_path, "r") as file:
-        return file.read()
+    try:
+        with open(html_file_path, "r") as file:
+            return file.read()
+    except FileNotFoundError:
+        st.error(f"HTML file not found at path: {html_file_path}")
+        return ""
 
 def load_css():
-    css_file_path = "path/to/your/style.css"  # Ganti dengan path yang benar
+    css_file_path = "path/to/your/styles.css"  # Ganti dengan path yang benar
     try:
         with open(css_file_path, "r") as file:
             return file.read()
@@ -156,10 +171,10 @@ def main():
                 color = "green" if sentiment == "Fakta" else "red"
 
                 st.markdown(f"""
-        <div style="text-align: center; background-color: {color}; color: white; padding: 10px;">
-            <strong>{sentiment}</strong>
-        </div>
-        """, unsafe_allow_html=True)
+                <div style="text-align: center; background-color: {color}; color: white; padding: 10px;">
+                    <strong>{sentiment}</strong>
+                </div>
+                """, unsafe_allow_html=True)
 
                 # Display probabilities
                 st.write(f"**Probabilitas Fakta:** {prob_fakta:.2f}%")
